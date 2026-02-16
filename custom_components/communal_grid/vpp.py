@@ -26,6 +26,36 @@ _DATA_DIR = Path(__file__).parent / "data"
 _VPP_REGISTRY_FILE = _DATA_DIR / "vpp_registry.json"
 
 
+def _normalize_utility_name(name: str) -> str:
+    """Normalize a utility name for fuzzy comparison.
+
+    Strips common corporate suffixes (Co, Co., Company, Corp, Corp.,
+    Corporation, Inc, Inc., LLC) and extra whitespace so that
+    "Pacific Gas & Electric Co" matches "Pacific Gas & Electric".
+    """
+    import re
+
+    normalized = name.strip().lower()
+    # Remove trailing corporate suffixes (with optional period)
+    normalized = re.sub(
+        r"\s+(co\.?|company|corp\.?|corporation|inc\.?|llc|l\.l\.c\.)$",
+        "",
+        normalized,
+    )
+    # Collapse extra whitespace
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized
+
+
+def _utility_matches(registry_name: str, user_name: str) -> bool:
+    """Check if a utility name from the VPP registry matches the user's utility.
+
+    Uses normalized comparison to handle variations like
+    'Pacific Gas & Electric' vs 'Pacific Gas & Electric Co'.
+    """
+    return _normalize_utility_name(registry_name) == _normalize_utility_name(user_name)
+
+
 def _manufacturer_matches(required: str, actual: str | None) -> bool:
     """Check if a device manufacturer matches a VPP requirement.
 
@@ -107,7 +137,7 @@ class VPPRegion:
         if self.state == "*":
             if user_utility and self.utilities != ["*"]:
                 return any(
-                    u.lower() == user_utility.lower() for u in self.utilities
+                    _utility_matches(u, user_utility) for u in self.utilities
                 )
             return True
 
@@ -121,7 +151,7 @@ class VPPRegion:
 
         if user_utility:
             return any(
-                u.lower() == user_utility.lower() for u in self.utilities
+                _utility_matches(u, user_utility) for u in self.utilities
             )
 
         # State matches and no utility filter specified
