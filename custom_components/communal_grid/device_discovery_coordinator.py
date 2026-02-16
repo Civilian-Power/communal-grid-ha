@@ -43,8 +43,11 @@ class DeviceDiscoveryCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 return self.data
             raise UpdateFailed(f"Device discovery failed: {err}") from err
 
-        # Build the data dict with counts and device lists
+        # Build the data dict with counts, device lists, and power totals
         total = 0
+        total_power_w = 0.0
+        total_annual_kwh = 0.0
+        monitored_count = 0
         result: dict[str, Any] = {}
 
         for category, devices in categorized.items():
@@ -53,8 +56,22 @@ class DeviceDiscoveryCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             result[f"{category}_count"] = count
             result[f"{category}s"] = [d.to_dict() for d in devices]
 
+            # Sum up power data across all devices
+            for device in devices:
+                if device.current_power_w is not None:
+                    total_power_w += device.current_power_w
+                    monitored_count += 1
+                if device.estimated_annual_kwh is not None:
+                    total_annual_kwh += device.estimated_annual_kwh
+
         result["total_devices"] = total
+        result["total_current_power_w"] = round(total_power_w, 1)
+        result["total_estimated_annual_kwh"] = round(total_annual_kwh, 1)
+        result["monitored_device_count"] = monitored_count
         result["last_scan"] = datetime.now().isoformat()
 
-        _LOGGER.debug("Device discovery found %d total controllable devices", total)
+        _LOGGER.debug(
+            "Device discovery found %d devices (%d with power monitoring, %.1f W total)",
+            total, monitored_count, total_power_w,
+        )
         return result

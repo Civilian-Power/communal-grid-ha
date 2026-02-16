@@ -3,7 +3,7 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/Civilian-Power/communal-grid-ha)](https://github.com/Civilian-Power/communal-grid-ha/releases)
 
-A Home Assistant custom integration that shows the current electricity and gas rate your home is paying. Fetches real rate schedule data from the [OpenEI Utility Rate Database](https://openei.org/wiki/Utility_Rate_Database), which covers 3,700+ US utilities.
+A Home Assistant custom integration that shows the current electricity and gas rate your home is paying, and discovers controllable devices that can help reduce your energy usage. Fetches real rate schedule data from the [OpenEI Utility Rate Database](https://openei.org/wiki/Utility_Rate_Database), which covers 3,700+ US utilities.
 
 ## Features
 
@@ -12,6 +12,8 @@ A Home Assistant custom integration that shows the current electricity and gas r
 - **Automatic schedule updates** — Fetches rate data from OpenEI daily, recalculates every minute
 - **Seasonal awareness** — Handles summer vs. winter rate differences automatically
 - **Gas rate support** — Manually configure your gas rate ($/therm or $/ccf)
+- **Device discovery** — Automatically finds thermostats, smart plugs, EV chargers, water heaters, smart lights, and power monitors in your Home Assistant
+- **Power consumption tracking** — Shows current watts and estimated annual kWh for devices that report power usage (e.g., TP-Link KP115)
 - **Automation-ready** — Use the Rate Tier sensor to trigger automations (e.g., turn off AC during peak)
 - **HACS compatible** — Install through the Home Assistant Community Store
 
@@ -22,6 +24,9 @@ A Home Assistant custom integration that shows the current electricity and gas r
 | Electric Rate | `0.351` | $/kWh | Current electricity rate based on TOU schedule |
 | Rate Tier | `peak` | — | Current tier: `peak`, `off_peak`, `partial_peak`, or `super_off_peak` |
 | Gas Rate | `1.500` | $/therm | Static rate from your configuration |
+| Controllable Devices | `7` | devices | Count of energy-relevant devices discovered in HA |
+
+The **Controllable Devices** sensor includes detailed attributes: per-category counts, device names, manufacturers, models, current power draw (watts), and estimated annual energy usage (kWh/year) for devices with power monitoring.
 
 ## Prerequisites
 
@@ -68,6 +73,8 @@ entities:
     name: Electric Rate
   - entity: sensor.communal_grid_rate_tier
     name: Current Tier
+  - entity: sensor.communal_grid_controllable_devices
+    name: Controllable Devices
   - entity: sensor.communal_grid_gas_rate
     name: Gas Rate
 ```
@@ -132,6 +139,120 @@ styles:
       - font-size: 16px
       - opacity: '0.9'
       - margin-top: 4px
+```
+
+### Controllable Devices Card with Power Usage (requires button-card from HACS)
+
+Shows all discovered devices grouped by category, with current power draw and estimated annual kWh for devices that report usage.
+
+```yaml
+type: vertical-stack
+cards:
+  - type: custom:button-card
+    entity: sensor.communal_grid_controllable_devices
+    layout: vertical
+    name: Controllable Devices
+    show_state: false
+    show_icon: true
+    icon: mdi:devices
+    custom_fields:
+      count: |
+        [[[
+          const total = entity.state;
+          const power = entity.attributes.total_current_power_w;
+          let text = `${total} devices found`;
+          if (power > 0) text += ` · ${power.toFixed(0)} W now`;
+          return text;
+        ]]]
+      annual: |
+        [[[
+          const annual = entity.attributes.total_estimated_annual_kwh;
+          const monitored = entity.attributes.monitored_device_count;
+          if (annual > 0) return `~${annual.toFixed(0)} kWh/yr estimated (${monitored} monitored)`;
+          return '';
+        ]]]
+    styles:
+      grid:
+        - grid-template-areas: '"i" "n" "count" "annual"'
+        - grid-template-rows: auto auto auto auto
+      card:
+        - border-radius: 16px 16px 0 0
+        - padding: 20px
+        - background: 'linear-gradient(135deg, #6366f1, #4f46e5)'
+        - color: white
+      icon:
+        - width: 32px
+        - color: white
+      name:
+        - font-size: 14px
+        - opacity: '0.9'
+        - text-transform: uppercase
+        - letter-spacing: 1px
+      custom_fields:
+        count:
+          - font-size: 24px
+          - font-weight: bold
+          - margin-top: 8px
+        annual:
+          - font-size: 13px
+          - opacity: '0.8'
+          - margin-top: 4px
+  - type: markdown
+    content: >
+      {% set s = states.sensor.communal_grid_controllable_devices %}
+      {% if s and s.attributes %}
+
+      {% set thermostats = s.attributes.get('thermostats', []) %}
+      {% set plugs = s.attributes.get('smart_plugs', []) %}
+      {% set evs = s.attributes.get('ev_chargers', []) %}
+      {% set heaters = s.attributes.get('water_heaters', []) %}
+      {% set lights = s.attributes.get('smart_lights', []) %}
+      {% set monitors = s.attributes.get('power_monitors', []) %}
+
+      {% macro device_line(d) %}
+      - **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %}{% if d.current_power_w != None %} · ⚡ {{ d.current_power_w }}W (est. {{ d.estimated_annual_kwh }} kWh/yr){% endif %}
+
+      {% endmacro %}
+
+      {% if thermostats | length > 0 %}
+
+      **🌡️ Thermostats ({{ thermostats | length }})**
+
+      {% for d in thermostats %}{{ device_line(d) }}{% endfor %}{% endif %}
+
+      {% if plugs | length > 0 %}
+
+      **🔌 Smart Plugs ({{ plugs | length }})**
+
+      {% for d in plugs %}{{ device_line(d) }}{% endfor %}{% endif %}
+
+      {% if evs | length > 0 %}
+
+      **🚗 EV Chargers ({{ evs | length }})**
+
+      {% for d in evs %}{{ device_line(d) }}{% endfor %}{% endif %}
+
+      {% if heaters | length > 0 %}
+
+      **🔥 Water Heaters ({{ heaters | length }})**
+
+      {% for d in heaters %}{{ device_line(d) }}{% endfor %}{% endif %}
+
+      {% if lights | length > 0 %}
+
+      **💡 Smart Lights ({{ lights | length }})**
+
+      {% for d in lights %}{{ device_line(d) }}{% endfor %}{% endif %}
+
+      {% if monitors | length > 0 %}
+
+      **⚡ Power Monitors ({{ monitors | length }})**
+
+      {% for d in monitors %}{{ device_line(d) }}{% endfor %}{% endif %}
+
+      {% else %}
+      No device data available yet.
+      {% endif %}
 ```
 
 ### Rate History Graph
@@ -212,14 +333,31 @@ Any US utility in the [OpenEI Utility Rate Database](https://apps.openei.org/USU
    - Current time of day
    - Day of week (weekday vs. weekend)
    - Season (summer vs. winter)
-4. Sensors update with the current rate and tier
-5. If the API is unreachable, it continues using the last successfully fetched schedule
+4. Every 5 minutes, it scans your Home Assistant for controllable energy devices and reads their current power draw
+5. Sensors update with the current rate, tier, and device information
+6. If the API is unreachable, it continues using the last successfully fetched schedule
+
+## Device Discovery
+
+Communal Grid automatically discovers devices across your Home Assistant that can help reduce energy usage. It scans the entity and device registries every 5 minutes and categorizes devices into:
+
+| Category | What it finds | How it detects them |
+|----------|--------------|---------------------|
+| Thermostats | Nest, Ecobee, etc. | All `climate` domain entities |
+| Smart Plugs | TP-Link, Kasa, Shelly, Meross, etc. | `switch` entities with `device_class: outlet` or known manufacturers |
+| EV Chargers | Wallbox, ChargePoint, OpenEVSE, etc. | Keyword matching on entity name/model |
+| Water Heaters | Any smart water heater | All `water_heater` domain entities |
+| Smart Lights | Any smart light | All `light` domain entities |
+| Power Monitors | Energy monitoring sensors | `sensor` entities with `device_class: power` or `energy` |
+
+For devices with power monitoring (like the TP-Link KP115), Communal Grid reads the current wattage and estimates annual energy usage based on `watts × 8,760 hours ÷ 1,000`.
 
 ## Troubleshooting
 
 - **"Invalid API key"** — Verify your key at [apps.openei.org](https://apps.openei.org). OpenEI keys are different from NREL developer keys.
 - **No rate plans found** — Your utility may not have residential TOU plans in OpenEI. Try searching the [USRDB web interface](https://apps.openei.org/USURDB/) to verify.
 - **Rate shows 0.0** — The rate plan may be flat-rate or tiered rather than TOU. Check the integration logs for parsing warnings.
+- **Controllable Devices shows 0** — Make sure your other integrations (Nest, TP-Link, etc.) are set up and working in Home Assistant first. Communal Grid can only discover devices that are already registered.
 
 ## Contributing
 

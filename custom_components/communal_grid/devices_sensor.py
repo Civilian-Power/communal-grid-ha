@@ -72,6 +72,9 @@ class ControllableDevicesSensor(
         data = self.coordinator.data
         attrs: dict[str, Any] = {
             "total_devices": data.get("total_devices", 0),
+            "total_current_power_w": data.get("total_current_power_w", 0),
+            "total_estimated_annual_kwh": data.get("total_estimated_annual_kwh", 0),
+            "monitored_device_count": data.get("monitored_device_count", 0),
             "thermostat_count": data.get(f"{DEVICE_CAT_THERMOSTAT}_count", 0),
             "smart_plug_count": data.get(f"{DEVICE_CAT_SMART_PLUG}_count", 0),
             "ev_charger_count": data.get(f"{DEVICE_CAT_EV_CHARGER}_count", 0),

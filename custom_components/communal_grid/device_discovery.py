@@ -3,6 +3,9 @@
 Scans the entity and device registries to find devices that can be
 controlled to reduce power usage, such as thermostats, smart plugs,
 EV chargers, water heaters, and smart lights.
+
+For devices with power monitoring sensors, also reads current wattage
+and estimates annual energy usage (kWh/year).
 """
 from __future__ import annotations
 
@@ -27,6 +30,9 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+# Hours in a year, used to estimate annual kWh from instantaneous watts
+HOURS_PER_YEAR = 8760
+
 
 @dataclass
 class DiscoveredDevice:
@@ -38,6 +44,9 @@ class DiscoveredDevice:
     model: str | None
     device_type: str
     has_power_monitoring: bool
+    current_power_w: float | None
+    estimated_annual_kwh: float | None
+    power_entity_id: str | None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for sensor attributes."""
@@ -64,16 +73,57 @@ class DeviceDiscovery:
             device.id: device for device in dev_reg.devices.values()
         }
 
-        # Build a set of entity_ids that have power/energy monitoring sensors
-        # (used to check if a switch also has power monitoring on the same device)
+        # Build maps for power monitoring:
+        #   power_device_ids: set of device_ids that have any power/energy sensor
+        #   device_power_info: device_id -> (power_entity_id, current_watts)
+        #     Prefers "power" sensors (instantaneous W) over "energy" sensors (cumulative kWh)
         power_device_ids: set[str] = set()
+        device_power_info: dict[str, dict[str, Any]] = {}
+
         for entity in ent_reg.entities.values():
             if entity.domain != "sensor" or entity.disabled:
                 continue
             state = self._hass.states.get(entity.entity_id)
-            if state and state.attributes.get("device_class") in ("power", "energy"):
-                if entity.device_id:
-                    power_device_ids.add(entity.device_id)
+            if not state:
+                continue
+
+            device_class = state.attributes.get("device_class")
+            if device_class not in ("power", "energy"):
+                continue
+
+            if entity.device_id:
+                power_device_ids.add(entity.device_id)
+
+                # Try to read the numeric value
+                try:
+                    value = float(state.state)
+                except (ValueError, TypeError):
+                    continue
+
+                unit = state.attributes.get("unit_of_measurement", "")
+                existing = device_power_info.get(entity.device_id)
+
+                if device_class == "power":
+                    # Convert kW to W if needed
+                    watts = value * 1000 if unit == "kW" else value
+                    # Power sensors always take priority over energy sensors
+                    if existing is None or existing.get("source") != "power":
+                        device_power_info[entity.device_id] = {
+                            "entity_id": entity.entity_id,
+                            "watts": watts,
+                            "source": "power",
+                        }
+
+                elif device_class == "energy" and existing is None:
+                    # Energy sensors (cumulative kWh) — only use if no power sensor exists
+                    # We can't derive instantaneous watts from cumulative energy,
+                    # so we store it differently
+                    kwh = value / 1000 if unit == "Wh" else value
+                    device_power_info[entity.device_id] = {
+                        "entity_id": entity.entity_id,
+                        "cumulative_kwh": kwh,
+                        "source": "energy",
+                    }
 
         results: dict[str, list[DiscoveredDevice]] = {
             DEVICE_CAT_THERMOSTAT: [],
@@ -113,6 +163,9 @@ class DeviceDiscovery:
             model = device_entry.model if device_entry else None
             has_power = entity.device_id in power_device_ids if entity.device_id else False
 
+            # Get power consumption data for this device
+            power_data = self._get_power_data(device_id, device_power_info)
+
             # Build searchable text for keyword matching
             search_text = " ".join(
                 filter(None, [friendly_name, manufacturer, model, entity.entity_id])
@@ -129,6 +182,7 @@ class DeviceDiscovery:
                         model=model,
                         device_type=DEVICE_CAT_EV_CHARGER,
                         has_power_monitoring=has_power,
+                        **power_data,
                     )
                 )
                 continue
@@ -144,6 +198,7 @@ class DeviceDiscovery:
                         model=model,
                         device_type=DEVICE_CAT_THERMOSTAT,
                         has_power_monitoring=has_power,
+                        **power_data,
                     )
                 )
                 continue
@@ -159,6 +214,7 @@ class DeviceDiscovery:
                         model=model,
                         device_type=DEVICE_CAT_WATER_HEATER,
                         has_power_monitoring=has_power,
+                        **power_data,
                     )
                 )
                 continue
@@ -176,6 +232,7 @@ class DeviceDiscovery:
                         model=model,
                         device_type=DEVICE_CAT_SMART_PLUG,
                         has_power_monitoring=has_power,
+                        **power_data,
                     )
                 )
                 continue
@@ -191,6 +248,7 @@ class DeviceDiscovery:
                         model=model,
                         device_type=DEVICE_CAT_SMART_LIGHT,
                         has_power_monitoring=has_power,
+                        **power_data,
                     )
                 )
                 continue
@@ -208,6 +266,7 @@ class DeviceDiscovery:
                             model=model,
                             device_type=DEVICE_CAT_POWER_MONITOR,
                             has_power_monitoring=True,
+                            **power_data,
                         )
                     )
                     continue
@@ -216,6 +275,53 @@ class DeviceDiscovery:
             _LOGGER.debug("Discovered %d %s devices", len(devices), category)
 
         return results
+
+    @staticmethod
+    def _get_power_data(
+        device_id: str,
+        device_power_info: dict[str, dict[str, Any]],
+    ) -> dict[str, Any]:
+        """Get power consumption data for a device.
+
+        Returns dict with keys matching DiscoveredDevice power fields:
+        - current_power_w: Current power draw in watts (from power sensor)
+        - estimated_annual_kwh: Estimated annual usage (watts × 8760 / 1000)
+        - power_entity_id: The sensor entity providing the data
+        """
+        info = device_power_info.get(device_id)
+        if not info:
+            return {
+                "current_power_w": None,
+                "estimated_annual_kwh": None,
+                "power_entity_id": None,
+            }
+
+        power_entity_id = info["entity_id"]
+
+        if info["source"] == "power":
+            # We have instantaneous watts — estimate annual kWh
+            watts = info["watts"]
+            annual_kwh = round(watts * HOURS_PER_YEAR / 1000, 1)
+            return {
+                "current_power_w": round(watts, 1),
+                "estimated_annual_kwh": annual_kwh,
+                "power_entity_id": power_entity_id,
+            }
+
+        elif info["source"] == "energy":
+            # We have cumulative energy but no instantaneous power
+            # Can't estimate annual from cumulative total, so just flag it
+            return {
+                "current_power_w": None,
+                "estimated_annual_kwh": None,
+                "power_entity_id": power_entity_id,
+            }
+
+        return {
+            "current_power_w": None,
+            "estimated_annual_kwh": None,
+            "power_entity_id": None,
+        }
 
     @staticmethod
     def _is_ev_charger(domain: str, search_text: str) -> bool:
