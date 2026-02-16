@@ -1,7 +1,12 @@
 """Virtual Power Plant (VPP) registry loader and query helpers.
 
 Loads the VPP registry from the bundled JSON data file and provides
-methods to filter VPPs by region, utility, and supported device types.
+methods to filter VPPs by region, utility, and supported devices.
+
+Device matching supports three modes:
+  - Exact: model string must match exactly (default)
+  - Prefix: model string must start with one of the listed prefixes
+  - Wildcard: "*" matches any manufacturer or model
 
 The JSON file (data/vpp_registry.json) can be updated independently
 of the integration code — just edit the file and restart HA.
@@ -19,6 +24,43 @@ _LOGGER = logging.getLogger(__name__)
 # Path to the bundled VPP registry data file
 _DATA_DIR = Path(__file__).parent / "data"
 _VPP_REGISTRY_FILE = _DATA_DIR / "vpp_registry.json"
+
+
+def _manufacturer_matches(required: str, actual: str | None) -> bool:
+    """Check if a device manufacturer matches a VPP requirement.
+
+    Case-insensitive comparison. Returns False if actual is None.
+    """
+    if not actual:
+        return False
+    return required.lower() == actual.lower()
+
+
+def _model_matches(
+    required_models: list[str],
+    actual_model: str | None,
+    match_type: str = "exact",
+) -> bool:
+    """Check if a device model matches a VPP requirement.
+
+    Args:
+        required_models: List of model strings to match against.
+        actual_model: The model string from the discovered device.
+        match_type: "exact" for exact match, "prefix" for starts-with.
+
+    Returns:
+        True if the actual model matches any of the required models.
+    """
+    if not actual_model:
+        return False
+
+    actual_lower = actual_model.lower()
+
+    if match_type == "prefix":
+        return any(actual_lower.startswith(m.lower()) for m in required_models)
+    else:
+        # Exact match (default)
+        return any(actual_lower == m.lower() for m in required_models)
 
 
 @dataclass
@@ -87,6 +129,58 @@ class VPPRegion:
 
 
 @dataclass
+class VPPSupportedDevice:
+    """A specific device that a VPP program supports.
+
+    Captures manufacturer/model-level compatibility, since VPP programs
+    often only work with specific devices (e.g., TP-Link KP115 but not
+    KP125M, or only Rheem water heaters with EcoNet Wi-Fi).
+    """
+
+    der_type: str  # DER type ID (e.g., "smart_plug", "smart_thermostat")
+    manufacturer: str  # Manufacturer name, or "*" for any
+    models: list[str]  # Model names/prefixes, or ["*"] for any
+    match_type: str  # "exact" or "prefix"
+    notes: str | None  # Human-readable compatibility note
+
+    def matches_device(
+        self,
+        manufacturer: str | None = None,
+        model: str | None = None,
+    ) -> bool:
+        """Check if a discovered device matches this supported device entry.
+
+        Args:
+            manufacturer: Device manufacturer from HA device registry.
+            model: Device model from HA device registry.
+
+        Returns:
+            True if the device matches this entry's criteria.
+        """
+        # Check manufacturer
+        if self.manufacturer != "*":
+            if not _manufacturer_matches(self.manufacturer, manufacturer):
+                return False
+
+        # Check model
+        if self.models != ["*"]:
+            if not _model_matches(self.models, model, self.match_type):
+                return False
+
+        return True
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary for sensor attributes."""
+        return {
+            "der_type": self.der_type,
+            "manufacturer": self.manufacturer,
+            "models": self.models,
+            "match_type": self.match_type,
+            "notes": self.notes,
+        }
+
+
+@dataclass
 class VPPEntry:
     """A Virtual Power Plant program entry."""
 
@@ -97,7 +191,7 @@ class VPPEntry:
     regions: list[VPPRegion]
     enrollment_url: str
     management_url: str | None
-    supported_der_types: list[str]
+    supported_devices: list[VPPSupportedDevice]
     reward: VPPReward
     active: bool
 
@@ -110,7 +204,7 @@ class VPPEntry:
             "description": self.description,
             "enrollment_url": self.enrollment_url,
             "management_url": self.management_url,
-            "supported_der_types": self.supported_der_types,
+            "supported_devices": [sd.to_dict() for sd in self.supported_devices],
             "reward": self.reward.to_dict(),
             "active": self.active,
             "regions": [
@@ -128,8 +222,41 @@ class VPPEntry:
         return any(r.matches(state, utility) for r in self.regions)
 
     def supports_der_type(self, der_type: str) -> bool:
-        """Check if this VPP supports a given DER device type."""
-        return der_type in self.supported_der_types
+        """Check if this VPP supports a given DER type (any manufacturer/model).
+
+        This is a broad check — returns True if ANY supported_devices entry
+        has the given der_type, regardless of manufacturer/model.
+        """
+        return any(sd.der_type == der_type for sd in self.supported_devices)
+
+    def supports_device(
+        self,
+        der_type: str,
+        manufacturer: str | None = None,
+        model: str | None = None,
+    ) -> bool:
+        """Check if this VPP supports a specific device by type + manufacturer + model.
+
+        This is the precise check that accounts for model-level compatibility.
+
+        Args:
+            der_type: DER type ID (e.g., "smart_plug")
+            manufacturer: Device manufacturer (e.g., "TP-Link")
+            model: Device model (e.g., "KP115")
+
+        Returns:
+            True if the VPP supports this exact device.
+        """
+        for sd in self.supported_devices:
+            if sd.der_type != der_type:
+                continue
+            if sd.matches_device(manufacturer, model):
+                return True
+        return False
+
+    def get_supported_devices_for_type(self, der_type: str) -> list[VPPSupportedDevice]:
+        """Get all supported device entries for a given DER type."""
+        return [sd for sd in self.supported_devices if sd.der_type == der_type]
 
 
 class VPPRegistry:
@@ -142,14 +269,21 @@ class VPPRegistry:
         # Get all VPPs available in California for PG&E customers
         vpps = registry.get_vpps_for_region(state="CA", utility="Pacific Gas & Electric")
 
-        # Get VPPs that support smart thermostats
-        vpps = registry.get_vpps_for_der_type("smart_thermostat")
+        # Check if a specific device is supported by any VPP
+        vpps = registry.get_vpps_for_device(
+            der_type="smart_plug",
+            manufacturer="TP-Link",
+            model="KP115",
+        )
 
-        # Get VPPs matching both region and device type
+        # Get VPPs matching region AND a specific device
         vpps = registry.get_matching_vpps(
             state="CA",
             utility="Pacific Gas & Electric",
-            der_types=["smart_thermostat", "ev_charger"],
+            devices=[
+                {"der_type": "smart_plug", "manufacturer": "TP-Link", "model": "KP115"},
+                {"der_type": "smart_thermostat", "manufacturer": "Google", "model": "Nest Learning Thermostat"},
+            ],
         )
     """
 
@@ -193,6 +327,19 @@ class VPPRegistry:
         self._entries = []
         for item in raw.get("vpps", []):
             try:
+                # Parse supported_devices (v2 schema)
+                supported_devices = []
+                for sd in item.get("supported_devices", []):
+                    supported_devices.append(
+                        VPPSupportedDevice(
+                            der_type=sd["der_type"],
+                            manufacturer=sd.get("manufacturer", "*"),
+                            models=sd.get("models", ["*"]),
+                            match_type=sd.get("match_type", "exact"),
+                            notes=sd.get("notes"),
+                        )
+                    )
+
                 entry = VPPEntry(
                     id=item["id"],
                     name=item["name"],
@@ -204,7 +351,7 @@ class VPPRegistry:
                     ],
                     enrollment_url=item.get("enrollment_url", ""),
                     management_url=item.get("management_url"),
-                    supported_der_types=item.get("supported_der_types", []),
+                    supported_devices=supported_devices,
                     reward=VPPReward(
                         type=item["reward"]["type"],
                         value=item["reward"].get("value"),
@@ -260,7 +407,10 @@ class VPPRegistry:
         der_type: str,
         active_only: bool = True,
     ) -> list[VPPEntry]:
-        """Get VPPs that support a given DER device type.
+        """Get VPPs that support a given DER type (broad category match).
+
+        This does NOT check specific manufacturer/model — use
+        get_vpps_for_device() for precise matching.
 
         Args:
             der_type: DER type ID (e.g., "smart_thermostat", "ev_charger")
@@ -277,26 +427,59 @@ class VPPRegistry:
                 results.append(entry)
         return results
 
+    def get_vpps_for_device(
+        self,
+        der_type: str,
+        manufacturer: str | None = None,
+        model: str | None = None,
+        active_only: bool = True,
+    ) -> list[VPPEntry]:
+        """Get VPPs that support a specific device by type + manufacturer + model.
+
+        This is the precise query that checks model-level compatibility.
+
+        Args:
+            der_type: DER type ID (e.g., "smart_plug")
+            manufacturer: Device manufacturer (e.g., "TP-Link")
+            model: Device model (e.g., "KP115")
+            active_only: Only return active programs
+
+        Returns:
+            List of VPP entries that support this exact device.
+        """
+        results = []
+        for entry in self._entries:
+            if active_only and not entry.active:
+                continue
+            if entry.supports_device(der_type, manufacturer, model):
+                results.append(entry)
+        return results
+
     def get_matching_vpps(
         self,
         state: str | None = None,
         utility: str | None = None,
+        devices: list[dict[str, str | None]] | None = None,
         der_types: list[str] | None = None,
         active_only: bool = True,
     ) -> list[VPPEntry]:
-        """Get VPPs matching region AND supporting at least one DER type.
+        """Get VPPs matching region AND supporting at least one device.
 
         This is the primary query method for the future filtering view.
+        Supports both precise device matching and broad DER type matching.
 
         Args:
             state: Two-letter state code
             utility: Utility company name
-            der_types: List of DER type IDs the user has
+            devices: List of dicts with "der_type", "manufacturer", "model"
+                     keys — for precise model-level matching.
+            der_types: List of DER type IDs — for broad category matching
+                       (used as fallback if devices not provided).
             active_only: Only return active programs
 
         Returns:
             List of VPP entries that serve the region and support
-            at least one of the specified DER types.
+            at least one of the specified devices.
         """
         results = []
         for entry in self._entries:
@@ -304,10 +487,24 @@ class VPPRegistry:
                 continue
             if not entry.serves_region(state, utility):
                 continue
-            if der_types and not any(
-                entry.supports_der_type(dt) for dt in der_types
-            ):
-                continue
+
+            # Check device-level matching (precise)
+            if devices:
+                matched = any(
+                    entry.supports_device(
+                        d["der_type"],
+                        d.get("manufacturer"),
+                        d.get("model"),
+                    )
+                    for d in devices
+                )
+                if not matched:
+                    continue
+            # Fallback to broad DER type matching
+            elif der_types:
+                if not any(entry.supports_der_type(dt) for dt in der_types):
+                    continue
+
             results.append(entry)
         return results
 

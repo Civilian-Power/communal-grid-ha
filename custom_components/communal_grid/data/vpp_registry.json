@@ -1,6 +1,6 @@
 {
-  "_schema_version": "1.0",
-  "_description": "Virtual Power Plant (VPP) registry. Each entry represents a VPP program that residential customers can enroll in to earn rewards for reducing energy usage during grid events. Managed independently from the integration code.",
+  "_schema_version": "2.0",
+  "_description": "Virtual Power Plant (VPP) registry. Each entry represents a VPP program that residential customers can enroll in. The supported_devices array specifies exactly which manufacturer/model combinations are compatible — use '*' for wildcards, 'prefix' match_type for model families.",
   "vpps": [
     {
       "id": "ohmconnect",
@@ -12,7 +12,85 @@
       ],
       "enrollment_url": "https://www.ohmconnect.com/",
       "management_url": "https://login.ohmconnect.com/",
-      "supported_der_types": ["smart_thermostat", "smart_plug", "ev_charger", "smart_light", "smart_water_heater"],
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Google",
+          "models": ["Nest Learning Thermostat", "Nest Thermostat E", "Nest Thermostat"],
+          "notes": "All Nest thermostat models"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Ecobee",
+          "models": ["*"],
+          "notes": "All Ecobee models"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Honeywell",
+          "models": ["T9", "T10"],
+          "match_type": "prefix",
+          "notes": "Honeywell Home T9 and T10 series with Wi-Fi"
+        },
+        {
+          "der_type": "smart_plug",
+          "manufacturer": "TP-Link",
+          "models": ["KP115", "HS110", "HS300"],
+          "notes": "Must have energy monitoring capability"
+        },
+        {
+          "der_type": "smart_plug",
+          "manufacturer": "Kasa",
+          "models": ["KP115", "HS110", "HS300"],
+          "notes": "Kasa-branded versions of TP-Link energy monitoring plugs"
+        },
+        {
+          "der_type": "smart_plug",
+          "manufacturer": "WeMo",
+          "models": ["Insight"],
+          "match_type": "prefix",
+          "notes": "WeMo Insight smart plug with energy monitoring"
+        },
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "ChargePoint",
+          "models": ["Home Flex"],
+          "match_type": "prefix",
+          "notes": "ChargePoint Home Flex Level 2"
+        },
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "JuiceBox",
+          "models": ["*"],
+          "notes": "All JuiceBox / Enel X Way models"
+        },
+        {
+          "der_type": "smart_light",
+          "manufacturer": "Philips",
+          "models": ["Hue"],
+          "match_type": "prefix",
+          "notes": "Philips Hue bulbs and fixtures"
+        },
+        {
+          "der_type": "smart_light",
+          "manufacturer": "LIFX",
+          "models": ["*"],
+          "notes": "All LIFX models"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Rheem",
+          "models": ["EcoNet"],
+          "match_type": "prefix",
+          "notes": "Only Rheem models with EcoNet Wi-Fi technology"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Aquanta",
+          "models": ["*"],
+          "notes": "Aquanta smart water heater controller (retrofit)"
+        }
+      ],
       "reward": {
         "type": "per_event",
         "value": null,
@@ -32,7 +110,15 @@
       ],
       "enrollment_url": "https://www.tesla.com/support/energy/virtual-power-plant",
       "management_url": "https://www.tesla.com/teslaaccount/energy",
-      "supported_der_types": ["battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": ["Powerwall"],
+          "match_type": "prefix",
+          "notes": "All Powerwall generations (Powerwall 2, Powerwall+, Powerwall 3)"
+        }
+      ],
       "reward": {
         "type": "per_kwh",
         "value": 2.00,
@@ -51,7 +137,14 @@
       ],
       "enrollment_url": "https://store.google.com/us/category/nest_renew",
       "management_url": "https://home.nest.com/",
-      "supported_der_types": ["smart_thermostat"],
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Google",
+          "models": ["Nest Learning Thermostat", "Nest Thermostat E", "Nest Thermostat"],
+          "notes": "Nest thermostats only (Google ecosystem)"
+        }
+      ],
       "reward": {
         "type": "per_kwh",
         "value": null,
@@ -72,7 +165,15 @@
       ],
       "enrollment_url": "https://enphase.com/homeowners/enphase-energy-vpp",
       "management_url": "https://enlighten.enphaseenergy.com/",
-      "supported_der_types": ["battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Enphase",
+          "models": ["IQ Battery"],
+          "match_type": "prefix",
+          "notes": "Enphase IQ Battery 5P, 10, 10T, 3T"
+        }
+      ],
       "reward": {
         "type": "per_kwh",
         "value": null,
@@ -92,7 +193,15 @@
       ],
       "enrollment_url": "https://sonnenusa.com/en/sonnenconnect/",
       "management_url": "https://my.sonnen.de/",
-      "supported_der_types": ["battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "sonnen",
+          "models": ["ecoLinx", "eco", "sonnenCore"],
+          "match_type": "prefix",
+          "notes": "All sonnen residential battery systems"
+        }
+      ],
       "reward": {
         "type": "flat_monthly",
         "value": null,
@@ -113,7 +222,29 @@
       ],
       "enrollment_url": "https://www.sunrun.com/solar-battery-storage/virtual-power-plants",
       "management_url": "https://www.sunrun.com/my-account",
-      "supported_der_types": ["battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Sunrun",
+          "models": ["Brightbox"],
+          "match_type": "prefix",
+          "notes": "Sunrun Brightbox battery system"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": ["Powerwall"],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall installed through Sunrun"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "LG",
+          "models": ["RESU"],
+          "match_type": "prefix",
+          "notes": "LG RESU battery installed through Sunrun"
+        }
+      ],
       "reward": {
         "type": "flat_yearly",
         "value": 750.0,
@@ -134,7 +265,15 @@
       ],
       "enrollment_url": "https://www.generac.com/concerto",
       "management_url": "https://app.pwrfleet.com/",
-      "supported_der_types": ["battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Generac",
+          "models": ["PWRcell"],
+          "match_type": "prefix",
+          "notes": "Generac PWRcell battery system"
+        }
+      ],
       "reward": {
         "type": "per_event",
         "value": null,
@@ -157,7 +296,45 @@
       ],
       "enrollment_url": "https://www.enelx.com/n-a/en/demand-response",
       "management_url": "https://www.enelx.com/n-a/en",
-      "supported_der_types": ["smart_thermostat", "smart_plug", "ev_charger", "smart_water_heater", "battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any connected thermostat"
+        },
+        {
+          "der_type": "smart_plug",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any smart plug with energy monitoring preferred"
+        },
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "JuiceBox",
+          "models": ["*"],
+          "notes": "JuiceBox / Enel X Way chargers (owned by Enel)"
+        },
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "Wallbox",
+          "models": ["Pulsar"],
+          "match_type": "prefix",
+          "notes": "Wallbox Pulsar and Pulsar Plus"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any connected water heater"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any home battery system"
+        }
+      ],
       "reward": {
         "type": "per_kwh",
         "value": null,
@@ -176,7 +353,32 @@
       ],
       "enrollment_url": "https://www.virtualpeaker.com/",
       "management_url": null,
-      "supported_der_types": ["smart_thermostat", "smart_water_heater", "ev_charger", "battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Varies by utility program"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Varies by utility program"
+        },
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Varies by utility program"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Varies by utility program"
+        }
+      ],
       "reward": {
         "type": "flat_yearly",
         "value": null,
@@ -197,7 +399,28 @@
       ],
       "enrollment_url": "https://www.swellenergy.com/",
       "management_url": "https://app.swellenergy.com/",
-      "supported_der_types": ["battery_storage"],
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": ["Powerwall"],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall through Swell Energy"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Enphase",
+          "models": ["IQ Battery"],
+          "match_type": "prefix",
+          "notes": "Enphase IQ Battery through Swell Energy"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Franklin",
+          "models": ["*"],
+          "notes": "Franklin WH battery through Swell Energy"
+        }
+      ],
       "reward": {
         "type": "flat_yearly",
         "value": null,

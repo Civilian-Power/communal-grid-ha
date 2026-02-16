@@ -367,8 +367,10 @@ The **VPP registry** (`data/vpp_registry.json`) is a curated list of Virtual Pow
 | Geographic regions | States and specific utilities the program serves |
 | Enrollment URL | Where to sign up for the program |
 | Management URL | Where to manage your enrollment |
-| Supported DER types | Which device types the program works with |
+| Supported devices | **Model-specific** — which manufacturer/model combos the program works with |
 | Reward structure | How you get paid — per kWh, per event, flat monthly/yearly |
+
+VPP device compatibility is at the **manufacturer + model** level, not just device category. For example, OhmConnect supports TP-Link KP115 (energy monitoring) but not KP125M. Each `supported_devices` entry specifies the DER type, manufacturer, and models with three match modes: exact match (default), prefix match (for model families like "EcoNet*"), or wildcard (`"*"` for any).
 
 **Included VPP programs:** OhmConnect, Tesla Virtual Power Plant, Nest Renew, Enphase VPP, sonnenCommunity, Sunrun VPP, Generac Concerto, Enel X Demand Response, Virtual Peaker BYOD, Swell Energy VPP.
 
@@ -390,17 +392,23 @@ The **DER registry** (`data/der_registry.json`) maps device types to your Home A
 ### How They Connect
 
 ```
-Your HA Devices          DER Registry              VPP Registry
-─────────────────     ──────────────────      ───────────────────
-Nest Thermostat   ──► smart_thermostat   ──►  OhmConnect
-                                          ──►  Nest Renew
-                                          ──►  Enel X
-TP-Link KP115     ──► smart_plug         ──►  OhmConnect
-                                          ──►  Enel X
-Wallbox Pulsar    ──► ev_charger         ──►  OhmConnect
-                                          ──►  Virtual Peaker
-Tesla Powerwall   ──► battery_storage    ──►  Tesla VPP
-                                          ──►  Swell Energy
+Your HA Devices              DER Type              VPP Match (model-specific)
+───────────────────────   ─────────────────   ─────────────────────────────
+Google Nest Thermostat ──► smart_thermostat ──► OhmConnect (Nest models ✓)
+                                            ──► Nest Renew (Nest models ✓)
+                                            ──► Enel X (any thermostat ✓)
+
+TP-Link KP115          ──► smart_plug      ──► OhmConnect (KP115 ✓)
+                                            ──► Enel X (any plug ✓)
+
+TP-Link KP125M         ──► smart_plug      ──► OhmConnect (KP125M ✗)
+                                            ──► Enel X (any plug ✓)
+
+Rheem EcoNet WH        ──► smart_water_htr ──► OhmConnect (EcoNet* ✓)
+Rheem Performance WH   ──► smart_water_htr ──► OhmConnect (not EcoNet ✗)
+
+Tesla Powerwall 3      ──► battery_storage ──► Tesla VPP (Powerwall* ✓)
+                                            ──► Swell Energy (Powerwall* ✓)
 ```
 
 ### Updating the Registries
