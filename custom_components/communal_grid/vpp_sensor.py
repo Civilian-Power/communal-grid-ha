@@ -149,16 +149,38 @@ class VPPMatchSensor(
                 manufacturer = device.get("manufacturer")
                 model = device.get("model")
 
-                if not vpp.supports_device(der_type, manufacturer, model):
+                # First try matching with the category-derived DER type
+                matched_der_type = None
+                matched_sd = None
+
+                if vpp.supports_device(der_type, manufacturer, model):
+                    matched_der_type = der_type
+                    for sd in vpp.get_supported_devices_for_type(der_type):
+                        if sd.matches_device(manufacturer, model):
+                            matched_sd = sd
+                            break
+                else:
+                    # Fallback: the device may be categorized under a
+                    # different HA category than its real type (e.g., a
+                    # KP115 smart plug appears as "power_monitor" because
+                    # HA discovers its energy sensor, not its switch).
+                    # Check this VPP's supported_devices entries that have
+                    # a SPECIFIC manufacturer (not wildcard) — if the
+                    # manufacturer+model matches, use that entry's DER type.
+                    # We skip wildcard entries here to avoid false positives
+                    # (e.g., a Lutron dimmer matching a wildcard thermostat).
+                    for sd in vpp.supported_devices:
+                        if sd.manufacturer == "*":
+                            continue
+                        if sd.matches_device(manufacturer, model):
+                            matched_der_type = sd.der_type
+                            matched_sd = sd
+                            break
+
+                if matched_der_type is None:
                     continue
 
-                # Find the matching supported_device entry for the notes
-                notes = None
-                for sd in vpp.get_supported_devices_for_type(der_type):
-                    if sd.matches_device(manufacturer, model):
-                        notes = sd.notes
-                        break
-
+                notes = matched_sd.notes if matched_sd else None
                 power_w = device.get("current_power_w") or 0.0
                 annual_kwh = device.get("estimated_annual_kwh") or 0.0
 
@@ -166,7 +188,7 @@ class VPPMatchSensor(
                     "name": device["name"],
                     "manufacturer": manufacturer,
                     "model": model,
-                    "der_type": der_type,
+                    "der_type": matched_der_type,
                     "estimated_annual_kwh": annual_kwh,
                     "current_power_w": power_w,
                     "notes": notes,
