@@ -110,14 +110,26 @@ class OpenEIClient:
             _LOGGER.error("API key validation failed: %s", err)
             raise
 
-    async def get_utilities(self, state: str | None = None) -> list[dict[str, str]]:
-        """Get a list of available utilities."""
+    async def get_utilities(
+        self,
+        state: str | None = None,
+        lat: float | None = None,
+        lon: float | None = None,
+    ) -> list[dict[str, str]]:
+        """Get a list of available utilities.
+
+        If lat/lon are provided, returns utilities near that location (sorted by proximity).
+        Otherwise falls back to filtering by state abbreviation.
+        """
         params: dict[str, Any] = {
             "detail": "minimal",
             "limit": "500",
             "sector": "Residential",
         }
-        if state:
+        if lat is not None and lon is not None:
+            params["lat"] = str(lat)
+            params["lon"] = str(lon)
+        elif state:
             params["address"] = state
 
         data = await self._api_request(params)

@@ -1,7 +1,7 @@
 {
   "domain": "communal_grid",
   "name": "Communal Grid",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "documentation": "https://github.com/Civilian-Power/communal-grid-ha",
   "issue_tracker": "https://github.com/Civilian-Power/communal-grid-ha/issues",
   "requirements": [],

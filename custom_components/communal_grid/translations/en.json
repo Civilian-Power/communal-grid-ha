@@ -10,7 +10,7 @@
       },
       "select_utility": {
         "title": "Select Your Utility",
-        "description": "Choose your electric utility company from the list below.",
+        "description": "We found these utility companies near your Home Assistant location. Select yours from the list below.",
         "data": {
           "utility_selection": "Utility Company"
         }

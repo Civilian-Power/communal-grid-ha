@@ -49,9 +49,11 @@ A Home Assistant custom integration that shows the current electricity and gas r
 2. Search for **Communal Grid**
 3. Follow the 4-step setup:
    - **Step 1:** Enter your OpenEI API key
-   - **Step 2:** Select your utility company from the dropdown
+   - **Step 2:** Select your utility company — the list is automatically filtered to utilities near your Home Assistant home location
    - **Step 3:** Select your rate plan
    - **Step 4:** Optionally configure a gas rate
+
+> **Note:** The utility auto-detection uses the home location configured in **Settings → System → General**. Make sure your home address is set for the best results.
 
 ## Dashboard Cards
 
@@ -75,6 +77,7 @@ entities:
 ```yaml
 type: custom:button-card
 entity: sensor.communal_grid_rate_tier
+layout: vertical
 name: Electricity Rate
 show_state: false
 show_icon: true
@@ -97,6 +100,9 @@ custom_fields:
       return names[tier] || tier;
     ]]]
 styles:
+  grid:
+    - grid-template-areas: '"i" "n" "rate" "tier"'
+    - grid-template-rows: auto auto auto auto
   card:
     - border-radius: 16px
     - padding: 20px
@@ -200,7 +206,7 @@ Any US utility in the [OpenEI Utility Rate Database](https://apps.openei.org/USU
 
 ## How It Works
 
-1. During setup, the integration fetches your utility's rate schedule from OpenEI
+1. During setup, the integration uses your Home Assistant home location to find nearby utilities, then fetches your selected utility's rate schedule from OpenEI
 2. Every 24 hours, it re-fetches the schedule to pick up any rate changes
 3. Every 1 minute, it recalculates which TOU period is active based on:
    - Current time of day

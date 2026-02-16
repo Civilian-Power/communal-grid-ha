@@ -2,7 +2,7 @@
 
 Walks the user through 4 steps:
 1. Enter OpenEI API key
-2. Select their utility company
+2. Select their utility company (auto-detected from HA home location)
 3. Select their rate plan
 4. Optionally configure gas rate
 """
@@ -101,7 +101,19 @@ class CommunalGridConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 session = async_get_clientsession(self.hass)
                 client = OpenEIClient(session, self._data[CONF_API_KEY])
-                self._utilities = await client.get_utilities()
+
+                # Use Home Assistant's configured home location to find nearby utilities
+                lat = self.hass.config.latitude
+                lon = self.hass.config.longitude
+
+                if lat and lon:
+                    _LOGGER.debug(
+                        "Using HA home location (%.4f, %.4f) to find utilities", lat, lon
+                    )
+                    self._utilities = await client.get_utilities(lat=lat, lon=lon)
+                else:
+                    _LOGGER.debug("No home location set, fetching all utilities")
+                    self._utilities = await client.get_utilities()
             except OpenEIError as err:
                 _LOGGER.error("Failed to fetch utilities: %s", err)
                 return self.async_abort(reason="api_error")
