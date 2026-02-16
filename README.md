@@ -1,7 +1,7 @@
 # Communal Grid - Home Assistant Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![GitHub Release](https://img.shields.io/github/v/release/Civilian-Power/ha-communal-grid)](https://github.com/Civilian-Power/ha-communal-grid/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/Civilian-Power/communal-grid-ha)](https://github.com/Civilian-Power/communal-grid-ha/releases)
 
 A Home Assistant custom integration that shows the current electricity and gas rate your home is paying. Fetches real rate schedule data from the [OpenEI Utility Rate Database](https://openei.org/wiki/Utility_Rate_Database), which covers 3,700+ US utilities.
 
@@ -34,7 +34,7 @@ A Home Assistant custom integration that shows the current electricity and gas r
 
 1. Open HACS in your Home Assistant
 2. Click the three dots menu → **Custom repositories**
-3. Add `https://github.com/Civilian-Power/ha-communal-grid` with category **Integration**
+3. Add `https://github.com/Civilian-Power/communal-grid-ha` with category **Integration**
 4. Search for **Communal Grid** and click **Download**
 5. Restart Home Assistant
 
@@ -217,7 +217,7 @@ Any US utility in the [OpenEI Utility Rate Database](https://apps.openei.org/USU
 
 ## Contributing
 
-Issues and pull requests welcome at [github.com/Civilian-Power/ha-communal-grid](https://github.com/Civilian-Power/ha-communal-grid).
+Issues and pull requests welcome at [github.com/Civilian-Power/communal-grid-ha](https://github.com/Civilian-Power/communal-grid-ha).
 
 ## License
 
