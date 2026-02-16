@@ -169,9 +169,9 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "Enphase",
-          "models": ["IQ Battery"],
+          "models": ["IQ Battery", "Envoy"],
           "match_type": "prefix",
-          "notes": "Enphase IQ Battery 5P, 10, 10T, 3T"
+          "notes": "Enphase IQ Battery systems (HA may report via Envoy gateway)"
         }
       ],
       "reward": {
