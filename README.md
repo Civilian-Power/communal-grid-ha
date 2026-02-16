@@ -3,6 +3,8 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/Civilian-Power/communal-grid-ha)](https://github.com/Civilian-Power/communal-grid-ha/releases)
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Civilian-Power&repository=communal-grid-ha&category=integration)
+
 A Home Assistant custom integration that shows the current electricity and gas rate your home is paying, and discovers controllable devices that can help reduce your energy usage. Fetches real rate schedule data from the [OpenEI Utility Rate Database](https://openei.org/wiki/Utility_Rate_Database), which covers 3,700+ US utilities.
 
 ## Features
@@ -41,6 +43,8 @@ The **VPP Matches** sensor cross-references your configured utility and discover
 ## Installation
 
 ### HACS (Recommended)
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Civilian-Power&repository=communal-grid-ha&category=integration)
 
 1. Open HACS in your Home Assistant
 2. Click the three dots menu → **Custom repositories**
