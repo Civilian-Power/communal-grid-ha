@@ -27,8 +27,11 @@ A Home Assistant custom integration that shows the current electricity and gas r
 | Rate Tier | `peak` | — | Current tier: `peak`, `off_peak`, `partial_peak`, or `super_off_peak` |
 | Gas Rate | `1.500` | $/therm | Static rate from your configuration |
 | Controllable Devices | `7` | devices | Count of energy-relevant devices discovered in HA |
+| VPP Matches | `3` | programs | Count of VPP programs matching your utility and devices |
 
 The **Controllable Devices** sensor includes detailed attributes: per-category counts, device names, manufacturers, models, current power draw (watts), and estimated annual energy usage (kWh/year) for devices with power monitoring.
+
+The **VPP Matches** sensor cross-references your configured utility and discovered devices against the VPP registry using model-specific matching. Its attributes include each matching VPP's name, reward info, enrollment link, and a list of your qualifying devices with their power data.
 
 ## Prerequisites
 
@@ -77,6 +80,8 @@ entities:
     name: Current Tier
   - entity: sensor.communal_grid_controllable_devices
     name: Controllable Devices
+  - entity: sensor.communal_grid_vpp_matches
+    name: VPP Matches
   - entity: sensor.communal_grid_gas_rate
     name: Gas Rate
 ```
@@ -254,6 +259,105 @@ cards:
 
       {% else %}
       No device data available yet.
+      {% endif %}
+```
+
+### VPP Matches Card (requires button-card from HACS)
+
+Shows which Virtual Power Plant programs are available in your region for your specific devices, with per-VPP qualifying device lists, power usage, and enrollment links.
+
+```yaml
+type: vertical-stack
+cards:
+  - type: custom:button-card
+    entity: sensor.communal_grid_vpp_matches
+    layout: vertical
+    name: VPP Programs
+    show_state: false
+    show_icon: true
+    icon: mdi:lightning-bolt-circle
+    custom_fields:
+      count: |
+        [[[
+          const n = entity.state;
+          if (n == 0) return 'No matching programs found';
+          return `${n} program${n > 1 ? 's' : ''} match your devices`;
+        ]]]
+      utility: |
+        [[[
+          const u = entity.attributes.utility_name || '';
+          return u ? `Utility: ${u}` : '';
+        ]]]
+    styles:
+      grid:
+        - grid-template-areas: '"i" "n" "count" "utility"'
+        - grid-template-rows: auto auto auto auto
+      card:
+        - border-radius: 16px 16px 0 0
+        - padding: 20px
+        - background: 'linear-gradient(135deg, #059669, #047857)'
+        - color: white
+      icon:
+        - width: 32px
+        - color: white
+      name:
+        - font-size: 14px
+        - opacity: '0.9'
+        - text-transform: uppercase
+        - letter-spacing: 1px
+      custom_fields:
+        count:
+          - font-size: 24px
+          - font-weight: bold
+          - margin-top: 8px
+        utility:
+          - font-size: 13px
+          - opacity: '0.8'
+          - margin-top: 4px
+  - type: markdown
+    content: >
+      {% set s = states.sensor.communal_grid_vpp_matches %}
+      {% if s and s.attributes and s.attributes.matching_vpps is defined %}
+
+      {% set vpps = s.attributes.matching_vpps %}
+
+      {% if vpps | length == 0 %}
+
+      *No VPP programs match your current utility and devices.
+      Add more smart devices or check back as new programs launch.*
+
+      {% else %}
+
+      {% for vpp in vpps %}
+
+      ---
+
+      ### ⚡ {{ vpp.name }}
+
+      **{{ vpp.provider }}** · {{ vpp.matching_device_count }} qualifying device{{ 's' if vpp.matching_device_count != 1 }}
+
+      {% if vpp.reward and vpp.reward.description %}💰 {{ vpp.reward.description }}{% endif %}
+
+      | Device | Type | Power | Est. Annual |
+      |--------|------|-------|-------------|
+      {% for d in vpp.matching_devices -%}
+      | **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %} | {{ d.der_type | replace('_', ' ') | title }} | {% if d.current_power_w %}{{ d.current_power_w | round(0) }}W{% else %}—{% endif %} | {% if d.estimated_annual_kwh %}{{ d.estimated_annual_kwh | round(0) }} kWh{% else %}—{% endif %} |
+      {% endfor %}
+
+      {% if vpp.total_matching_annual_kwh > 0 %}**Total:** {{ vpp.total_matching_power_w | round(0) }}W now · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr{% endif %}
+
+      {% if vpp.enrollment_url %}[Enroll →]({{ vpp.enrollment_url }}){% endif %}{% if vpp.management_url %} · [Manage]({{ vpp.management_url }}){% endif %}
+
+      {% if vpp.matching_devices | length > 0 and vpp.matching_devices[0].notes %}
+      *{{ vpp.matching_devices[0].notes }}*
+      {% endif %}
+
+      {% endfor %}
+
+      {% endif %}
+
+      {% else %}
+      *VPP matching data not available yet. Waiting for device discovery...*
       {% endif %}
 ```
 

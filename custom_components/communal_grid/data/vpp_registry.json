@@ -416,9 +416,9 @@
         },
         {
           "der_type": "battery_storage",
-          "manufacturer": "Franklin",
+          "manufacturer": "FranklinWH",
           "models": ["*"],
-          "notes": "Franklin WH battery through Swell Energy"
+          "notes": "FranklinWH battery through Swell Energy"
         }
       ],
       "reward": {

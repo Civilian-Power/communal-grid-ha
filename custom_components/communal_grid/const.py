@@ -55,6 +55,7 @@ GAS_UNITS = {
 # Device discovery
 DEVICE_DISCOVERY_INTERVAL = timedelta(minutes=5)
 SENSOR_CONTROLLABLE_DEVICES = "controllable_devices"
+SENSOR_VPP_MATCHES = "vpp_matches"
 
 # Device categories
 DEVICE_CAT_THERMOSTAT = "thermostat"

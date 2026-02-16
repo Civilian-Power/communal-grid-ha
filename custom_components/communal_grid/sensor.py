@@ -5,6 +5,7 @@ Creates sensors:
 - Rate Tier: Current tier name (peak, off_peak, etc.)
 - Gas Rate: Static gas rate from user config ($/therm or $/ccf)
 - Controllable Devices: Count of energy-relevant devices in HA
+- VPP Matches: VPP programs matching user's utility and devices
 """
 from __future__ import annotations
 
@@ -34,6 +35,7 @@ from .const import (
 )
 from .coordinator import CommunalGridCoordinator
 from .devices_sensor import ControllableDevicesSensor
+from .vpp_sensor import VPPMatchSensor
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,11 +56,14 @@ async def async_setup_entry(
     coordinators = hass.data[DOMAIN][entry.entry_id]
     rate_coordinator: CommunalGridCoordinator = coordinators["rate"]
     device_discovery_coordinator = coordinators["device_discovery"]
+    vpp_registry = coordinators["vpp_registry"]
+    der_registry = coordinators["der_registry"]
 
     entities: list[SensorEntity] = [
         ElectricRateSensor(rate_coordinator, entry),
         RateTierSensor(rate_coordinator, entry),
         ControllableDevicesSensor(device_discovery_coordinator, entry),
+        VPPMatchSensor(device_discovery_coordinator, entry, vpp_registry, der_registry),
     ]
 
     if rate_coordinator.has_gas:
