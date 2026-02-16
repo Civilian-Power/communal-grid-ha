@@ -346,7 +346,7 @@ cards:
 
       {% if vpp.total_matching_annual_kwh > 0 %}**Total:** {{ vpp.total_matching_power_w | round(0) }}W now · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr{% endif %}
 
-      {% if vpp.enrollment_url %}[Enroll →]({{ vpp.enrollment_url }}){% endif %}{% if vpp.management_url %} · [Manage]({{ vpp.management_url }}){% endif %}
+      {% if vpp.enrollment_url %}<a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>{% endif %}
 
       {% if vpp.matching_devices | length > 0 and vpp.matching_devices[0].notes %}
       *{{ vpp.matching_devices[0].notes }}*
