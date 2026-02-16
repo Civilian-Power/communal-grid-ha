@@ -338,19 +338,13 @@ cards:
 
       {% if vpp.reward and vpp.reward.description %}💰 {{ vpp.reward.description }}{% endif %}
 
-      | Device | Type | Power | Est. Annual |
-      |--------|------|-------|-------------|
-      {% for d in vpp.matching_devices -%}
-      | **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %} | {{ d.der_type | replace('_', ' ') | title }} | {% if d.current_power_w %}{{ d.current_power_w | round(0) }}W{% else %}—{% endif %} | {% if d.estimated_annual_kwh %}{{ d.estimated_annual_kwh | round(0) }} kWh{% else %}—{% endif %} |
+      {% for d in vpp.matching_devices %}
+      - **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
       {% endfor %}
 
       {% if vpp.total_matching_annual_kwh > 0 %}**Total:** {{ vpp.total_matching_power_w | round(0) }}W now · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr{% endif %}
 
       {% if vpp.enrollment_url %}<a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>{% endif %}
-
-      {% if vpp.matching_devices | length > 0 and vpp.matching_devices[0].notes %}
-      *{{ vpp.matching_devices[0].notes }}*
-      {% endif %}
 
       {% endfor %}
 
