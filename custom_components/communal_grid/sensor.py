@@ -1,9 +1,10 @@
 """Sensor entities for the Communal Grid integration.
 
-Creates three sensors:
+Creates sensors:
 - Electric Rate: Current $/kWh based on TOU schedule
 - Rate Tier: Current tier name (peak, off_peak, etc.)
 - Gas Rate: Static gas rate from user config ($/therm or $/ccf)
+- Controllable Devices: Count of energy-relevant devices in HA
 """
 from __future__ import annotations
 
@@ -32,6 +33,7 @@ from .const import (
     TIER_SUPER_OFF_PEAK,
 )
 from .coordinator import CommunalGridCoordinator
+from .devices_sensor import ControllableDevicesSensor
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,15 +51,18 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Communal Grid sensors from a config entry."""
-    coordinator: CommunalGridCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinators = hass.data[DOMAIN][entry.entry_id]
+    rate_coordinator: CommunalGridCoordinator = coordinators["rate"]
+    device_discovery_coordinator = coordinators["device_discovery"]
 
     entities: list[SensorEntity] = [
-        ElectricRateSensor(coordinator, entry),
-        RateTierSensor(coordinator, entry),
+        ElectricRateSensor(rate_coordinator, entry),
+        RateTierSensor(rate_coordinator, entry),
+        ControllableDevicesSensor(device_discovery_coordinator, entry),
     ]
 
-    if coordinator.has_gas:
-        entities.append(GasRateSensor(coordinator, entry))
+    if rate_coordinator.has_gas:
+        entities.append(GasRateSensor(rate_coordinator, entry))
 
     async_add_entities(entities)
 
@@ -88,6 +93,7 @@ class CommunalGridBaseSensor(CoordinatorEntity[CommunalGridCoordinator], SensorE
           - sensor.communal_grid_electric_rate
           - sensor.communal_grid_rate_tier
           - sensor.communal_grid_gas_rate
+          - sensor.communal_grid_controllable_devices
         """
         return DeviceInfo(
             identifiers={(DOMAIN, self._entry.entry_id)},

@@ -51,3 +51,46 @@ GAS_UNITS = {
     "therm": "$/therm",
     "ccf": "$/ccf",
 }
+
+# Device discovery
+DEVICE_DISCOVERY_INTERVAL = timedelta(minutes=5)
+SENSOR_CONTROLLABLE_DEVICES = "controllable_devices"
+
+# Device categories
+DEVICE_CAT_THERMOSTAT = "thermostat"
+DEVICE_CAT_SMART_PLUG = "smart_plug"
+DEVICE_CAT_EV_CHARGER = "ev_charger"
+DEVICE_CAT_WATER_HEATER = "water_heater"
+DEVICE_CAT_SMART_LIGHT = "smart_light"
+DEVICE_CAT_POWER_MONITOR = "power_monitor"
+
+# Known smart plug manufacturers (case-insensitive matching)
+SMART_PLUG_MANUFACTURERS = [
+    "tp-link",
+    "kasa",
+    "shelly",
+    "lutron",
+    "wemo",
+    "meross",
+    "sonoff",
+    "tuya",
+    "tasmota",
+    "gosund",
+    "teckin",
+]
+
+# Keywords that indicate an EV charger (matched against entity name/model, case-insensitive)
+EV_CHARGER_KEYWORDS = [
+    "ev_charger",
+    "ev charger",
+    "evse",
+    "wallbox",
+    "chargepoint",
+    "juicebox",
+    "grizzl-e",
+    "openevse",
+    "emporia",
+    "tesla wall connector",
+    "peblar",
+    "keba",
+]

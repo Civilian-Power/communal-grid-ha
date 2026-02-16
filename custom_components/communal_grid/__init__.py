@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 from .coordinator import CommunalGridCoordinator
+from .device_discovery_coordinator import DeviceDiscoveryCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,14 +20,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Communal Grid from a config entry."""
     _LOGGER.debug("Setting up Communal Grid integration for %s", entry.title)
 
-    coordinator = CommunalGridCoordinator(hass, entry)
+    # Create rate data coordinator (1-minute update cycle)
+    rate_coordinator = CommunalGridCoordinator(hass, entry)
+    await rate_coordinator.async_config_entry_first_refresh()
 
-    # Fetch initial data
-    await coordinator.async_config_entry_first_refresh()
+    # Create device discovery coordinator (5-minute scan cycle)
+    device_discovery_coordinator = DeviceDiscoveryCoordinator(hass)
+    await device_discovery_coordinator.async_config_entry_first_refresh()
 
-    # Store coordinator for sensor platform to access
+    # Store both coordinators for sensor platform to access
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = coordinator
+    hass.data[DOMAIN][entry.entry_id] = {
+        "rate": rate_coordinator,
+        "device_discovery": device_discovery_coordinator,
+    }
 
     # Forward setup to sensor platform
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS_LIST)
