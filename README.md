@@ -14,6 +14,8 @@ A Home Assistant custom integration that shows the current electricity and gas r
 - **Gas rate support** — Manually configure your gas rate ($/therm or $/ccf)
 - **Device discovery** — Automatically finds thermostats, smart plugs, EV chargers, water heaters, smart lights, and power monitors in your Home Assistant
 - **Power consumption tracking** — Shows current watts and estimated annual kWh for devices that report power usage (e.g., TP-Link KP115)
+- **VPP program directory** — Bundled registry of 10+ Virtual Power Plant programs with enrollment links and reward info
+- **DER device mapping** — Maps your discovered devices to Distributed Energy Resource types for VPP eligibility
 - **Automation-ready** — Use the Rate Tier sensor to trigger automations (e.g., turn off AC during peak)
 - **HACS compatible** — Install through the Home Assistant Community Store
 
@@ -351,6 +353,63 @@ Communal Grid automatically discovers devices across your Home Assistant that ca
 | Power Monitors | Energy monitoring sensors | `sensor` entities with `device_class: power` or `energy` |
 
 For devices with power monitoring (like the TP-Link KP115), Communal Grid reads the current wattage and estimates annual energy usage based on `watts × 8,760 hours ÷ 1,000`.
+
+## VPP & DER Registries
+
+Communal Grid includes two bundled data registries that map your discovered devices to real-world energy programs:
+
+### Virtual Power Plants (VPPs)
+
+The **VPP registry** (`data/vpp_registry.json`) is a curated list of Virtual Power Plant programs across the US. Each entry includes:
+
+| Field | Description |
+|-------|-------------|
+| Geographic regions | States and specific utilities the program serves |
+| Enrollment URL | Where to sign up for the program |
+| Management URL | Where to manage your enrollment |
+| Supported DER types | Which device types the program works with |
+| Reward structure | How you get paid — per kWh, per event, flat monthly/yearly |
+
+**Included VPP programs:** OhmConnect, Tesla Virtual Power Plant, Nest Renew, Enphase VPP, sonnenCommunity, Sunrun VPP, Generac Concerto, Enel X Demand Response, Virtual Peaker BYOD, Swell Energy VPP.
+
+### Distributed Energy Resources (DERs)
+
+The **DER registry** (`data/der_registry.json`) maps device types to your Home Assistant devices and to VPP programs. Each entry includes:
+
+| Field | Description |
+|-------|-------------|
+| HA domain & category | Maps to your Controllable Devices sensor categories |
+| Controllable actions | What actions can be automated (e.g., set_temperature, turn_off) |
+| Energy impact | Low, medium, high, or very high |
+| Typical power range | Min/max watts for the device type |
+| VPP compatible | Whether VPP programs support this device type |
+| Demand response role | How this device helps during grid events |
+
+**Included DER types:** Smart Thermostat, Smart Plug, EV Charger, Smart Water Heater, Smart Light, Home Battery, Pool Pump, Solar Inverter.
+
+### How They Connect
+
+```
+Your HA Devices          DER Registry              VPP Registry
+─────────────────     ──────────────────      ───────────────────
+Nest Thermostat   ──► smart_thermostat   ──►  OhmConnect
+                                          ──►  Nest Renew
+                                          ──►  Enel X
+TP-Link KP115     ──► smart_plug         ──►  OhmConnect
+                                          ──►  Enel X
+Wallbox Pulsar    ──► ev_charger         ──►  OhmConnect
+                                          ──►  Virtual Peaker
+Tesla Powerwall   ──► battery_storage    ──►  Tesla VPP
+                                          ──►  Swell Energy
+```
+
+### Updating the Registries
+
+Both registry files are standalone JSON and can be updated without changing any code:
+
+1. Edit `custom_components/communal_grid/data/vpp_registry.json` to add/remove VPP programs
+2. Edit `custom_components/communal_grid/data/der_registry.json` to add/remove DER device types
+3. Restart Home Assistant to reload the updated data
 
 ## Troubleshooting
 

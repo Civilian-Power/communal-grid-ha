@@ -94,3 +94,15 @@ EV_CHARGER_KEYWORDS = [
     "peblar",
     "keba",
 ]
+
+# Energy impact levels (used by DER registry)
+ENERGY_IMPACT_LOW = "low"
+ENERGY_IMPACT_MEDIUM = "medium"
+ENERGY_IMPACT_HIGH = "high"
+ENERGY_IMPACT_VERY_HIGH = "very_high"
+
+# VPP reward types
+VPP_REWARD_PER_KWH = "per_kwh"
+VPP_REWARD_PER_EVENT = "per_event"
+VPP_REWARD_FLAT_MONTHLY = "flat_monthly"
+VPP_REWARD_FLAT_YEARLY = "flat_yearly"

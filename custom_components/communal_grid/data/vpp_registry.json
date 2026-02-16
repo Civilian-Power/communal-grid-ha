@@ -1,0 +1,210 @@
+{
+  "_schema_version": "1.0",
+  "_description": "Virtual Power Plant (VPP) registry. Each entry represents a VPP program that residential customers can enroll in to earn rewards for reducing energy usage during grid events. Managed independently from the integration code.",
+  "vpps": [
+    {
+      "id": "ohmconnect",
+      "name": "OhmConnect",
+      "provider": "OhmConnect Inc.",
+      "description": "Earn rewards for reducing energy during OhmHours — peak demand events signaled by the grid.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]}
+      ],
+      "enrollment_url": "https://www.ohmconnect.com/",
+      "management_url": "https://login.ohmconnect.com/",
+      "supported_der_types": ["smart_thermostat", "smart_plug", "ev_charger", "smart_light", "smart_water_heater"],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Points redeemable for cash or gift cards; varies by event and savings achieved"
+      },
+      "active": true
+    },
+    {
+      "id": "tesla_virtual_power_plant",
+      "name": "Tesla Virtual Power Plant",
+      "provider": "Tesla Inc.",
+      "description": "Powerwall owners export stored solar energy to the grid during peak demand in exchange for credits.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric"]},
+        {"state": "TX", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://www.tesla.com/support/energy/virtual-power-plant",
+      "management_url": "https://www.tesla.com/teslaaccount/energy",
+      "supported_der_types": ["battery_storage"],
+      "reward": {
+        "type": "per_kwh",
+        "value": 2.00,
+        "currency": "USD",
+        "description": "Up to $2/kWh exported during grid events (varies by utility and event)"
+      },
+      "active": true
+    },
+    {
+      "id": "google_nest_renew",
+      "name": "Nest Renew",
+      "provider": "Google LLC",
+      "description": "Shifts thermostat energy usage to times when the grid has more clean energy or lower demand.",
+      "regions": [
+        {"state": "*", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://store.google.com/us/category/nest_renew",
+      "management_url": "https://home.nest.com/",
+      "supported_der_types": ["smart_thermostat"],
+      "reward": {
+        "type": "per_kwh",
+        "value": null,
+        "currency": "USD",
+        "description": "Free tier shifts to cleaner energy; Premium ($10/mo) matches usage with renewable credits"
+      },
+      "active": true
+    },
+    {
+      "id": "enphase_vpp",
+      "name": "Enphase Energy VPP",
+      "provider": "Enphase Energy Inc.",
+      "description": "Enphase battery owners can participate in grid services programs through their local utility.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]},
+        {"state": "CT", "utilities": ["*"]},
+        {"state": "MA", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://enphase.com/homeowners/enphase-energy-vpp",
+      "management_url": "https://enlighten.enphaseenergy.com/",
+      "supported_der_types": ["battery_storage"],
+      "reward": {
+        "type": "per_kwh",
+        "value": null,
+        "currency": "USD",
+        "description": "Varies by utility program; typically $0.50-$2.00/kWh during events"
+      },
+      "active": true
+    },
+    {
+      "id": "sonnen_vpp",
+      "name": "sonnenCommunity / sonnenVPP",
+      "provider": "sonnen Inc.",
+      "description": "Sonnen battery owners share stored energy with the community and grid during peak demand.",
+      "regions": [
+        {"state": "CA", "utilities": ["*"]},
+        {"state": "AZ", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://sonnenusa.com/en/sonnenconnect/",
+      "management_url": "https://my.sonnen.de/",
+      "supported_der_types": ["battery_storage"],
+      "reward": {
+        "type": "flat_monthly",
+        "value": null,
+        "currency": "USD",
+        "description": "Varies by program; some utilities offer monthly bill credits"
+      },
+      "active": true
+    },
+    {
+      "id": "sunrun_vpp",
+      "name": "Sunrun VPP / Shift",
+      "provider": "Sunrun Inc.",
+      "description": "Sunrun solar+battery customers can participate in grid services to earn credits on their energy bill.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]},
+        {"state": "MA", "utilities": ["*"]},
+        {"state": "NY", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://www.sunrun.com/solar-battery-storage/virtual-power-plants",
+      "management_url": "https://www.sunrun.com/my-account",
+      "supported_der_types": ["battery_storage"],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 750.0,
+        "currency": "USD",
+        "description": "Up to $750/year in bill credits for participating in grid events"
+      },
+      "active": true
+    },
+    {
+      "id": "generac_concerto",
+      "name": "Generac Concerto",
+      "provider": "Generac Power Systems",
+      "description": "Generac PWRcell and PWRview owners can participate in grid services through connected utilities.",
+      "regions": [
+        {"state": "CA", "utilities": ["*"]},
+        {"state": "TX", "utilities": ["*"]},
+        {"state": "NY", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://www.generac.com/concerto",
+      "management_url": "https://app.pwrfleet.com/",
+      "supported_der_types": ["battery_storage"],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Bill credits vary by utility and event participation"
+      },
+      "active": true
+    },
+    {
+      "id": "enel_x_demand_response",
+      "name": "Enel X Demand Response",
+      "provider": "Enel X",
+      "description": "Residential and commercial customers reduce load during demand response events for compensation.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison"]},
+        {"state": "NY", "utilities": ["*"]},
+        {"state": "NJ", "utilities": ["*"]},
+        {"state": "PA", "utilities": ["*"]},
+        {"state": "TX", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://www.enelx.com/n-a/en/demand-response",
+      "management_url": "https://www.enelx.com/n-a/en",
+      "supported_der_types": ["smart_thermostat", "smart_plug", "ev_charger", "smart_water_heater", "battery_storage"],
+      "reward": {
+        "type": "per_kwh",
+        "value": null,
+        "currency": "USD",
+        "description": "Compensation varies by market; typically $0.10-$1.00/kWh reduced"
+      },
+      "active": true
+    },
+    {
+      "id": "virtual_peaker",
+      "name": "Virtual Peaker BYOD Programs",
+      "provider": "Virtual Peaker (utility programs)",
+      "description": "Bring-your-own-device programs run by local utilities through the Virtual Peaker platform. Supports thermostats, water heaters, EV chargers, and batteries.",
+      "regions": [
+        {"state": "*", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://www.virtualpeaker.com/",
+      "management_url": null,
+      "supported_der_types": ["smart_thermostat", "smart_water_heater", "ev_charger", "battery_storage"],
+      "reward": {
+        "type": "flat_yearly",
+        "value": null,
+        "currency": "USD",
+        "description": "Varies by utility; typically $25-$200/year bill credit per enrolled device"
+      },
+      "active": true
+    },
+    {
+      "id": "swell_energy",
+      "name": "Swell Energy VPP",
+      "provider": "Swell Energy Inc.",
+      "description": "Home battery aggregation for grid services in California and other markets.",
+      "regions": [
+        {"state": "CA", "utilities": ["Southern California Edison", "Pacific Gas & Electric"]},
+        {"state": "HI", "utilities": ["*"]},
+        {"state": "NY", "utilities": ["*"]}
+      ],
+      "enrollment_url": "https://www.swellenergy.com/",
+      "management_url": "https://app.swellenergy.com/",
+      "supported_der_types": ["battery_storage"],
+      "reward": {
+        "type": "flat_yearly",
+        "value": null,
+        "currency": "USD",
+        "description": "Varies by program and utility; typically covers battery lease costs"
+      },
+      "active": true
+    }
+  ]
+}

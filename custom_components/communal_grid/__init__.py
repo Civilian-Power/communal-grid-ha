@@ -10,6 +10,8 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 from .coordinator import CommunalGridCoordinator
 from .device_discovery_coordinator import DeviceDiscoveryCoordinator
+from .vpp import VPPRegistry
+from .der import DERRegistry
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,11 +30,24 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     device_discovery_coordinator = DeviceDiscoveryCoordinator(hass)
     await device_discovery_coordinator.async_config_entry_first_refresh()
 
-    # Store both coordinators for sensor platform to access
+    # Load VPP and DER registries (standalone JSON data files)
+    vpp_registry = VPPRegistry()
+    der_registry = DERRegistry()
+    await hass.async_add_executor_job(vpp_registry.load)
+    await hass.async_add_executor_job(der_registry.load)
+    _LOGGER.debug(
+        "Loaded %d VPP programs and %d DER types",
+        len(vpp_registry.entries),
+        len(der_registry.entries),
+    )
+
+    # Store coordinators and registries for sensor platform to access
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
         "rate": rate_coordinator,
         "device_discovery": device_discovery_coordinator,
+        "vpp_registry": vpp_registry,
+        "der_registry": der_registry,
     }
 
     # Forward setup to sensor platform

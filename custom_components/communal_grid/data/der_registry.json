@@ -1,0 +1,197 @@
+{
+  "_schema_version": "1.0",
+  "_description": "Distributed Energy Resource (DER) registry. Maps DER device types to Home Assistant entity domains and device categories from the Controllable Devices sensor. Used to connect VPP program requirements to actual devices in the user's home. Managed independently from the integration code.",
+  "der_types": [
+    {
+      "id": "smart_thermostat",
+      "name": "Smart Thermostat",
+      "description": "WiFi-connected thermostat that can remotely adjust temperature setpoints and HVAC mode to shift or reduce heating/cooling load.",
+      "ha_domain": "climate",
+      "ha_device_category": "thermostat",
+      "controllable_actions": [
+        "set_temperature",
+        "set_hvac_mode",
+        "turn_off",
+        "set_preset_mode"
+      ],
+      "energy_impact": "high",
+      "typical_power_w": {"min": 1000, "max": 5000},
+      "common_manufacturers": [
+        "Google Nest",
+        "Ecobee",
+        "Honeywell Home",
+        "Emerson Sensi",
+        "Mysa",
+        "Cielo"
+      ],
+      "vpp_compatible": true,
+      "demand_response_role": "Load shifting — pre-cool/pre-heat before peak, then coast during events"
+    },
+    {
+      "id": "smart_plug",
+      "name": "Smart Plug / Outlet",
+      "description": "Smart plug or outlet that can turn connected appliances on/off remotely. Often includes energy monitoring.",
+      "ha_domain": "switch",
+      "ha_device_category": "smart_plug",
+      "controllable_actions": [
+        "turn_on",
+        "turn_off"
+      ],
+      "energy_impact": "medium",
+      "typical_power_w": {"min": 5, "max": 1800},
+      "common_manufacturers": [
+        "TP-Link / Kasa",
+        "Shelly",
+        "Meross",
+        "WeMo",
+        "Sonoff",
+        "Tuya",
+        "Gosund",
+        "Teckin"
+      ],
+      "vpp_compatible": true,
+      "demand_response_role": "Shed non-essential loads (space heaters, dehumidifiers, etc.) during peak events"
+    },
+    {
+      "id": "ev_charger",
+      "name": "EV Charger (EVSE)",
+      "description": "Electric vehicle charging station that can start, stop, or throttle charging to shift load to off-peak hours.",
+      "ha_domain": "switch",
+      "ha_device_category": "ev_charger",
+      "controllable_actions": [
+        "turn_on",
+        "turn_off",
+        "set_charging_rate"
+      ],
+      "energy_impact": "very_high",
+      "typical_power_w": {"min": 1400, "max": 19200},
+      "common_manufacturers": [
+        "Wallbox",
+        "ChargePoint",
+        "JuiceBox / Enel X",
+        "Grizzl-E",
+        "OpenEVSE",
+        "Emporia",
+        "Tesla",
+        "Peblar",
+        "KEBA"
+      ],
+      "vpp_compatible": true,
+      "demand_response_role": "Defer or reduce charging during peak demand; charge during off-peak/super-off-peak"
+    },
+    {
+      "id": "smart_water_heater",
+      "name": "Smart Water Heater",
+      "description": "Connected water heater that can pre-heat water during off-peak and maintain temperature during peak without active heating.",
+      "ha_domain": "water_heater",
+      "ha_device_category": "water_heater",
+      "controllable_actions": [
+        "set_temperature",
+        "set_operation_mode",
+        "turn_off"
+      ],
+      "energy_impact": "high",
+      "typical_power_w": {"min": 1500, "max": 5500},
+      "common_manufacturers": [
+        "Rheem",
+        "A.O. Smith",
+        "Bradford White",
+        "Rinnai",
+        "Aquanta"
+      ],
+      "vpp_compatible": true,
+      "demand_response_role": "Thermal battery — pre-heat during off-peak, coast through peak periods"
+    },
+    {
+      "id": "smart_light",
+      "name": "Smart Light",
+      "description": "Connected light bulb, switch, or fixture that can dim or turn off to reduce usage during peak demand.",
+      "ha_domain": "light",
+      "ha_device_category": "smart_light",
+      "controllable_actions": [
+        "turn_on",
+        "turn_off",
+        "set_brightness"
+      ],
+      "energy_impact": "low",
+      "typical_power_w": {"min": 5, "max": 100},
+      "common_manufacturers": [
+        "Philips Hue",
+        "LIFX",
+        "Wyze",
+        "Sengled",
+        "Govee",
+        "Nanoleaf",
+        "Lutron Caseta"
+      ],
+      "vpp_compatible": true,
+      "demand_response_role": "Reduce lighting load during peak — dim or turn off non-essential lights"
+    },
+    {
+      "id": "battery_storage",
+      "name": "Home Battery / Energy Storage",
+      "description": "Residential battery system that stores solar or off-peak grid energy and discharges during peak demand or grid events.",
+      "ha_domain": "sensor",
+      "ha_device_category": "power_monitor",
+      "controllable_actions": [
+        "set_operating_mode",
+        "set_reserve_percentage",
+        "force_discharge",
+        "force_charge"
+      ],
+      "energy_impact": "very_high",
+      "typical_power_w": {"min": 3000, "max": 15000},
+      "common_manufacturers": [
+        "Tesla Powerwall",
+        "Enphase IQ Battery",
+        "sonnen",
+        "Generac PWRcell",
+        "LG RESU",
+        "Franklin WH",
+        "SolarEdge Energy Bank"
+      ],
+      "vpp_compatible": true,
+      "demand_response_role": "Export stored energy to grid during peak events; charge during off-peak or from solar"
+    },
+    {
+      "id": "pool_pump",
+      "name": "Pool Pump",
+      "description": "Variable-speed or smart pool pump that can shift runtime to off-peak hours.",
+      "ha_domain": "switch",
+      "ha_device_category": "smart_plug",
+      "controllable_actions": [
+        "turn_on",
+        "turn_off",
+        "set_speed"
+      ],
+      "energy_impact": "high",
+      "typical_power_w": {"min": 500, "max": 2500},
+      "common_manufacturers": [
+        "Pentair",
+        "Hayward",
+        "Jandy"
+      ],
+      "vpp_compatible": false,
+      "demand_response_role": "Shift filtration runtime to off-peak hours; pause during demand events"
+    },
+    {
+      "id": "solar_inverter",
+      "name": "Solar Inverter",
+      "description": "PV inverter that reports solar production. Not directly controllable but informs energy decisions.",
+      "ha_domain": "sensor",
+      "ha_device_category": "power_monitor",
+      "controllable_actions": [],
+      "energy_impact": "very_high",
+      "typical_power_w": {"min": 0, "max": 12000},
+      "common_manufacturers": [
+        "Enphase",
+        "SolarEdge",
+        "SMA",
+        "Fronius",
+        "Hoymiles"
+      ],
+      "vpp_compatible": false,
+      "demand_response_role": "Monitoring only — informs when solar production can offset grid demand"
+    }
+  ]
+}
