@@ -43,6 +43,29 @@ _CATEGORY_KEYS = [
     DEVICE_CAT_POWER_MONITOR,
 ]
 
+# Suffixes commonly appended to HA entity names for power/energy sensors.
+# These are stripped to produce cleaner device names in VPP match results.
+_NAME_SUFFIXES_TO_STRIP = [
+    " Current consumption",
+    " Power Minute Average",
+    " Power",
+    " Energy",
+    " Current power",
+    "_power_usage_today",
+    " power_usage_today",
+    " Today\u2019s Energy Production",
+    " Today's Energy Production",
+]
+
+
+def _clean_device_name(name: str) -> str:
+    """Remove common HA sensor suffixes from a device name."""
+    for suffix in _NAME_SUFFIXES_TO_STRIP:
+        if name.endswith(suffix):
+            name = name[: -len(suffix)]
+            break
+    return name.strip()
+
 
 class VPPMatchSensor(
     CoordinatorEntity[DeviceDiscoveryCoordinator], SensorEntity
@@ -252,7 +275,7 @@ class VPPMatchSensor(
 
                 devices.append({
                     "entity_id": device.get("entity_id", ""),
-                    "name": device.get("name", "Unknown"),
+                    "name": _clean_device_name(device.get("name", "Unknown")),
                     "manufacturer": device.get("manufacturer"),
                     "model": device.get("model"),
                     "der_type": der_type,
