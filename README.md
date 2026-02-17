@@ -21,6 +21,8 @@ Communal Grid is a smart home service that automatically finds your smart energy
 
 ## Installation
 
+The Communal Grid app for Home Assistant requires you have a working [Home Assistant](https://www.home-assistant.io/) running within your home or business. Works on Home Assistant hardware, Raspberry Pi, or Docker containers.
+
 ### HACS (Recommended)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Civilian-Power&repository=communal-grid-ha&category=integration)
