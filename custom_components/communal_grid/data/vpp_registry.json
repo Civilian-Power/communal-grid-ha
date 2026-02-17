@@ -163,7 +163,7 @@
         {"state": "CT", "utilities": ["*"]},
         {"state": "MA", "utilities": ["*"]}
       ],
-      "enrollment_url": "https://enphase.com/homeowners/enphase-energy-vpp",
+      "enrollment_url": "https://greatergrid.com/enphase-battery-enroll",
       "management_url": "https://enlighten.enphaseenergy.com/",
       "supported_devices": [
         {
@@ -283,111 +283,6 @@
       "active": true
     },
     {
-      "id": "enel_x_demand_response",
-      "name": "Enel X Demand Response",
-      "provider": "Enel X",
-      "description": "Residential and commercial customers reduce load during demand response events for compensation.",
-      "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison"]},
-        {"state": "NY", "utilities": ["*"]},
-        {"state": "NJ", "utilities": ["*"]},
-        {"state": "PA", "utilities": ["*"]},
-        {"state": "TX", "utilities": ["*"]}
-      ],
-      "enrollment_url": "https://www.enelx.com/n-a/en/demand-response",
-      "management_url": "https://www.enelx.com/n-a/en",
-      "supported_devices": [
-        {
-          "der_type": "smart_thermostat",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Any connected thermostat"
-        },
-        {
-          "der_type": "smart_plug",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Any smart plug with energy monitoring preferred"
-        },
-        {
-          "der_type": "ev_charger",
-          "manufacturer": "JuiceBox",
-          "models": ["*"],
-          "notes": "JuiceBox / Enel X Way chargers (owned by Enel)"
-        },
-        {
-          "der_type": "ev_charger",
-          "manufacturer": "Wallbox",
-          "models": ["Pulsar"],
-          "match_type": "prefix",
-          "notes": "Wallbox Pulsar and Pulsar Plus"
-        },
-        {
-          "der_type": "smart_water_heater",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Any connected water heater"
-        },
-        {
-          "der_type": "battery_storage",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Any home battery system"
-        }
-      ],
-      "reward": {
-        "type": "per_kwh",
-        "value": null,
-        "currency": "USD",
-        "description": "Compensation varies by market; typically $0.10-$1.00/kWh reduced"
-      },
-      "active": true
-    },
-    {
-      "id": "virtual_peaker",
-      "name": "Virtual Peaker BYOD Programs",
-      "provider": "Virtual Peaker (utility programs)",
-      "description": "Bring-your-own-device programs run by local utilities through the Virtual Peaker platform. Supports thermostats, water heaters, EV chargers, and batteries.",
-      "regions": [
-        {"state": "*", "utilities": ["*"]}
-      ],
-      "enrollment_url": "https://www.virtualpeaker.com/",
-      "management_url": null,
-      "supported_devices": [
-        {
-          "der_type": "smart_thermostat",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Varies by utility program"
-        },
-        {
-          "der_type": "smart_water_heater",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Varies by utility program"
-        },
-        {
-          "der_type": "ev_charger",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Varies by utility program"
-        },
-        {
-          "der_type": "battery_storage",
-          "manufacturer": "*",
-          "models": ["*"],
-          "notes": "Varies by utility program"
-        }
-      ],
-      "reward": {
-        "type": "flat_yearly",
-        "value": null,
-        "currency": "USD",
-        "description": "Varies by utility; typically $25-$200/year bill credit per enrolled device"
-      },
-      "active": true
-    },
-    {
       "id": "swell_energy",
       "name": "Swell Energy VPP",
       "provider": "Swell Energy Inc.",
@@ -426,6 +321,74 @@
         "value": null,
         "currency": "USD",
         "description": "Varies by program and utility; typically covers battery lease costs"
+      },
+      "active": true
+    },
+    {
+      "id": "watter_saver",
+      "name": "Watter Saver",
+      "provider": "Virtual Peaker / PG&E",
+      "description": "Daily load-shifting program for water heaters. Automatically heats water when grid demand and electricity rates are lower, helping avoid outages and use more clean energy.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric"]}
+      ],
+      "enrollment_url": "https://www.watter-saver.com/signup/",
+      "management_url": "https://www.watter-saver.com/",
+      "supported_devices": [
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Rheem",
+          "models": ["*"],
+          "notes": "Wi-Fi enabled Rheem/Ruud heat pump water heaters"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Ruud",
+          "models": ["*"],
+          "notes": "Wi-Fi enabled Ruud heat pump water heaters (Rheem brand)"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "A.O. Smith",
+          "models": ["*"],
+          "notes": "Wi-Fi or CTA-2045 compatible A.O. Smith water heaters"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "State",
+          "models": ["*"],
+          "notes": "CTA-2045 compatible State water heaters (A.O. Smith brand)"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "American",
+          "models": ["*"],
+          "notes": "CTA-2045 compatible American water heaters (A.O. Smith brand)"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Reliance",
+          "models": ["*"],
+          "notes": "CTA-2045 compatible Reliance water heaters (A.O. Smith brand)"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Richmond",
+          "models": ["*"],
+          "notes": "Wi-Fi or CTA-2045 compatible Richmond water heaters"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "Ariston",
+          "models": ["*"],
+          "notes": "Wi-Fi or CTA-2045 compatible Ariston water heaters"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 110.0,
+        "currency": "USD",
+        "description": "$50 enrollment bonus + $5/month gift card ($60/year) for participation"
       },
       "active": true
     }
