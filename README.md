@@ -341,9 +341,15 @@ cards:
       {% endif %}
       {% endfor %}
       {% for mkey in ns.models | sort %}
-      - **{{ mkey | trim }}**
+      {% set mdevices = vpp.matching_devices | selectattr('manufacturer') | list | sort(attribute='name') %}
+      {% set mw = namespace(pw=0, kwh=0) %}
+      {% for d in vpp.matching_devices if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
+      {% set mw.pw = mw.pw + (d.current_power_w or 0) %}
+      {% set mw.kwh = mw.kwh + (d.estimated_annual_kwh or 0) %}
+      {% endfor %}
+      - **{{ mkey | trim }}**{% if mw.pw > 0 %} · ⚡ {{ mw.pw | round(0) }}W{% endif %}{% if mw.kwh > 0 %} · ~{{ mw.kwh | round(0) }} kWh/yr{% endif %}
       {% for d in vpp.matching_devices | sort(attribute='name') if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
-        - {{ d.name }}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
+        - {{ d.name }}
       {% endfor %}
       {% endfor %}
       {% if vpp.enrollment_url %}
