@@ -319,41 +319,31 @@ cards:
           - opacity: '0.8'
           - margin-top: 4px
   - type: markdown
-    content: >
+    content: |
       {% set s = states.sensor.communal_grid_vpp_matches %}
       {% if s and s.attributes and s.attributes.matching_vpps is defined %}
-
       {% set vpps = s.attributes.matching_vpps %}
-
       {% if vpps | length == 0 %}
-
-      *No VPP programs match your current utility and devices.
-      Add more smart devices or check back as new programs launch.*
-
+      *No VPP programs match your current utility and devices. Add more smart devices or check back as new programs launch.*
       {% else %}
-
       {% for vpp in vpps %}
-
       ---
-
       ### ⚡ {{ vpp.name }}
-
       **{{ vpp.provider }}** · {{ vpp.matching_device_count }} qualifying device{{ 's' if vpp.matching_device_count != 1 }}
-
-      {% if vpp.reward and vpp.reward.description %}💰 {{ vpp.reward.description }}{% endif %}
-
+      {% if vpp.reward and vpp.reward.description %}
+      💰 {{ vpp.reward.description }}
+      {% endif %}
       {% for d in vpp.matching_devices %}
       - **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
       {% endfor %}
-
-      {% if vpp.total_matching_annual_kwh > 0 %}**Total:** {{ vpp.total_matching_power_w | round(0) }}W now · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr{% endif %}
-
-      {% if vpp.enrollment_url %}<a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>{% endif %}
-
-      {% endfor %}
-
+      {% if vpp.total_matching_annual_kwh > 0 %}
+      **Total:** {{ vpp.total_matching_power_w | round(0) }}W now · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr
       {% endif %}
-
+      {% if vpp.enrollment_url %}
+      <a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
       {% else %}
       *VPP matching data not available yet. Waiting for device discovery...*
       {% endif %}
