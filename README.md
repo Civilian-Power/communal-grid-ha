@@ -329,16 +329,23 @@ cards:
       {% for vpp in vpps %}
       ---
       ### ⚡ {{ vpp.name }}
-      **{{ vpp.provider }}** · {{ vpp.matching_device_count }} qualifying device{{ 's' if vpp.matching_device_count != 1 }}
+      {{ vpp.matching_device_count }} qualifying device{{ 's' if vpp.matching_device_count != 1 }}{% if vpp.total_matching_power_w > 0 %} · **{{ vpp.total_matching_power_w | round(0) }}W** now{% endif %}{% if vpp.total_matching_annual_kwh > 0 %} · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr{% endif %}
       {% if vpp.reward and vpp.reward.description %}
       💰 {{ vpp.reward.description }}
       {% endif %}
+      {% set ns = namespace(types=[]) %}
       {% for d in vpp.matching_devices %}
-      - **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
-      {% endfor %}
-      {% if vpp.total_matching_annual_kwh > 0 %}
-      **Total:** {{ vpp.total_matching_power_w | round(0) }}W now · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr
+      {% set dtype = d.der_type | replace('_', ' ') | title %}
+      {% if dtype not in ns.types %}
+      {% set ns.types = ns.types + [dtype] %}
       {% endif %}
+      {% endfor %}
+      {% for dtype in ns.types %}
+      - **{{ dtype }}**
+      {% for d in vpp.matching_devices if (d.der_type | replace('_', ' ') | title) == dtype %}
+        - {{ d.name }}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
+      {% endfor %}
+      {% endfor %}
       {% if vpp.enrollment_url %}
       <a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>
       {% endif %}
