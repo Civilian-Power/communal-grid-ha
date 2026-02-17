@@ -347,10 +347,11 @@ cards:
       {% set mw.pw = mw.pw + (d.current_power_w or 0) %}
       {% set mw.kwh = mw.kwh + (d.estimated_annual_kwh or 0) %}
       {% endfor %}
-      - **{{ mkey | trim }}**{% if mw.pw > 0 %} · ⚡ {{ mw.pw | round(0) }}W{% endif %}{% if mw.kwh > 0 %} · ~{{ mw.kwh | round(0) }} kWh/yr{% endif %}
+      <details><summary><strong>{{ mkey | trim }}</strong>{% if mw.pw > 0 %} · ⚡ {{ mw.pw | round(0) }}W{% endif %}{% if mw.kwh > 0 %} · ~{{ mw.kwh | round(0) }} kWh/yr{% endif %}</summary>
       {% for d in vpp.matching_devices | sort(attribute='name') if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
-        - {{ d.name }}
+      · {{ d.name }}
       {% endfor %}
+      </details>
       {% endfor %}
       {% if vpp.enrollment_url %}
       <a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>
