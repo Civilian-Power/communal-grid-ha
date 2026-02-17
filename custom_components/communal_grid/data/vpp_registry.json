@@ -391,6 +391,56 @@
         "description": "$50 enrollment bonus + $5/month gift card ($60/year) for participation"
       },
       "active": true
+    },
+    {
+      "id": "climateresponse_vpp",
+      "name": "ClimateResponse VPP",
+      "provider": "Olivine Inc.",
+      "description": "Behavioral VPP that notifies participants when energy prices, emissions, or grid stress are high, and rewards actions taken to reduce consumption during those periods.",
+      "regions": [
+        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]}
+      ],
+      "enrollment_url": "https://www.climateresponse.com/",
+      "management_url": "https://www.climateresponse.com/",
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any connected thermostat; reduce HVAC during events"
+        },
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any EV charger; shift charging to off-peak"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any home battery system"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any connected water heater; includes thermal storage"
+        },
+        {
+          "der_type": "smart_plug",
+          "manufacturer": "*",
+          "models": ["*"],
+          "notes": "Any smart plug with energy monitoring"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Incentives for participation during grid events; no commitment, disenroll anytime"
+      },
+      "active": true
     }
   ]
 }
