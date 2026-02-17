@@ -5,35 +5,14 @@
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Civilian-Power&repository=communal-grid-ha&category=integration)
 
-A Home Assistant custom integration that shows the current electricity and gas rate your home is paying, and discovers controllable devices that can help reduce your energy usage. Fetches real rate schedule data from the [OpenEI Utility Rate Database](https://openei.org/wiki/Utility_Rate_Database), which covers 3,700+ US utilities.
+Communal Grid is a smart home service that automatically finds your smart energy devices (e.g. Nest thermostats, EV chargers, batteries, smart plugs, heat pump water heaters, etc.) and matches them to Virtual Power Plant (VPP) programs in your area that will pay you to use them more efficiently. It looks at your utility company, your location, and the specific devices you own to show you exactly which programs you're eligible for and how to enroll. Think of it as a matchmaker between your smart home and the clean energy programs that turn everyday devices into grid-supporting assets — earning you money while  preventing blackouts and reducing emissions. Try [Communal Grid on Home Assistant](https://my.home-assistant.io/redirect/hacs_repository/?owner=Civilian-Power&repository=communal-grid-ha&category=integration) today!
 
 ## Features
 
-- **Real-time electric rate** — Shows current $/kWh based on your Time-of-Use (TOU) schedule
-- **Rate tier tracking** — Displays whether you're in peak, off-peak, partial-peak, or super off-peak
-- **Automatic schedule updates** — Fetches rate data from OpenEI daily, recalculates every minute
-- **Seasonal awareness** — Handles summer vs. winter rate differences automatically
-- **Gas rate support** — Manually configure your gas rate ($/therm or $/ccf)
-- **Device discovery** — Automatically finds thermostats, smart plugs, EV chargers, water heaters, smart lights, and power monitors in your Home Assistant
-- **Power consumption tracking** — Shows current watts and estimated annual kWh for devices that report power usage (e.g., TP-Link KP115)
-- **VPP program directory** — Bundled registry of 10+ Virtual Power Plant programs with enrollment links and reward info
+- **Suggested VPP programs** — Local programs that reward you for optimizing power usage for smart devices
+- **VPP program directory** — Bundled registry of Virtual Power Plant programs with enrollment links and reward info
 - **DER device mapping** — Maps your discovered devices to Distributed Energy Resource types for VPP eligibility
-- **Automation-ready** — Use the Rate Tier sensor to trigger automations (e.g., turn off AC during peak)
-- **HACS compatible** — Install through the Home Assistant Community Store
-
-## Sensors
-
-| Sensor | Example State | Unit | Description |
-|--------|--------------|------|-------------|
-| Electric Rate | `0.351` | $/kWh | Current electricity rate based on TOU schedule |
-| Rate Tier | `peak` | — | Current tier: `peak`, `off_peak`, `partial_peak`, or `super_off_peak` |
-| Gas Rate | `1.500` | $/therm | Static rate from your configuration |
-| Controllable Devices | `7` | devices | Count of energy-relevant devices discovered in HA |
-| VPP Matches | `3` | programs | Count of VPP programs matching your utility and devices |
-
-The **Controllable Devices** sensor includes detailed attributes: per-category counts, device names, manufacturers, models, current power draw (watts), and estimated annual energy usage (kWh/year) for devices with power monitoring.
-
-The **VPP Matches** sensor cross-references your configured utility and discovered devices against the VPP registry using model-specific matching. Its attributes include each matching VPP's name, reward info, enrollment link, and a list of your qualifying devices with their power data.
+- **HACS compatible** — Install through the [Home Assistant](https://www.home-assistant.io/) Community Store
 
 ## Prerequisites
 
@@ -70,87 +49,6 @@ The **VPP Matches** sensor cross-references your configured utility and discover
 > **Note:** The utility auto-detection uses the home location configured in **Settings → System → General**. Make sure your home address is set for the best results.
 
 ## Dashboard Cards
-
-### Simple Entities Card
-
-```yaml
-type: entities
-title: Communal Grid
-show_header_toggle: false
-entities:
-  - entity: sensor.communal_grid_electric_rate
-    name: Electric Rate
-  - entity: sensor.communal_grid_rate_tier
-    name: Current Tier
-  - entity: sensor.communal_grid_controllable_devices
-    name: Controllable Devices
-  - entity: sensor.communal_grid_vpp_matches
-    name: VPP Matches
-  - entity: sensor.communal_grid_gas_rate
-    name: Gas Rate
-```
-
-### Color-Coded Rate Card (requires button-card from HACS)
-
-```yaml
-type: custom:button-card
-entity: sensor.communal_grid_rate_tier
-layout: vertical
-name: Electricity Rate
-show_state: false
-show_icon: true
-icon: mdi:flash
-custom_fields:
-  rate: |
-    [[[
-      const rate = states['sensor.communal_grid_electric_rate'].state;
-      return `$${Number(rate).toFixed(3)}/kWh`;
-    ]]]
-  tier: |
-    [[[
-      const tier = entity.state;
-      const names = {
-        'peak': 'Peak',
-        'off_peak': 'Off-Peak',
-        'partial_peak': 'Partial Peak',
-        'super_off_peak': 'Super Off-Peak'
-      };
-      return names[tier] || tier;
-    ]]]
-styles:
-  grid:
-    - grid-template-areas: '"i" "n" "rate" "tier"'
-    - grid-template-rows: auto auto auto auto
-  card:
-    - border-radius: 16px
-    - padding: 20px
-    - background: |
-        [[[
-          const tier = entity.state;
-          if (tier === 'peak') return 'linear-gradient(135deg, #ef4444, #dc2626)';
-          if (tier === 'partial_peak') return 'linear-gradient(135deg, #f59e0b, #d97706)';
-          if (tier === 'super_off_peak') return 'linear-gradient(135deg, #22c55e, #16a34a)';
-          return 'linear-gradient(135deg, #3b82f6, #2563eb)';
-        ]]]
-    - color: white
-  icon:
-    - width: 32px
-    - color: white
-  name:
-    - font-size: 14px
-    - opacity: '0.9'
-    - text-transform: uppercase
-    - letter-spacing: 1px
-  custom_fields:
-    rate:
-      - font-size: 32px
-      - font-weight: bold
-      - margin-top: 8px
-    tier:
-      - font-size: 16px
-      - opacity: '0.9'
-      - margin-top: 4px
-```
 
 ### Controllable Devices Card with Power Usage (requires button-card from HACS)
 
@@ -362,63 +260,6 @@ cards:
       *VPP matching data not available yet. Waiting for device discovery...*
       {% endif %}
 ```
-
-### Rate History Graph
-
-```yaml
-type: history-graph
-title: Rate History (24hr)
-hours_to_show: 24
-entities:
-  - entity: sensor.communal_grid_electric_rate
-    name: Electric Rate ($/kWh)
-```
-
-## Automation Examples
-
-### Turn off AC during peak hours
-
-```yaml
-alias: 'Energy Saver: AC off during peak'
-trigger:
-  - platform: state
-    entity_id: sensor.communal_grid_rate_tier
-    to: 'peak'
-action:
-  - service: climate.set_hvac_mode
-    target:
-      entity_id: climate.living_room
-    data:
-      hvac_mode: 'off'
-  - service: notify.mobile_app_your_phone
-    data:
-      title: 'Peak rates started'
-      message: >
-        Electric rate is now ${{ states('sensor.communal_grid_electric_rate') }}/kWh.
-        AC has been turned off to save money.
-```
-
-### Start EV charging during off-peak
-
-```yaml
-alias: 'EV: Charge during off-peak'
-trigger:
-  - platform: state
-    entity_id: sensor.communal_grid_rate_tier
-    to: 'off_peak'
-condition:
-  - condition: state
-    entity_id: binary_sensor.ev_charger_connected
-    state: 'on'
-action:
-  - service: switch.turn_on
-    target:
-      entity_id: switch.ev_charger
-```
-
-## Updating Gas Rate
-
-Go to **Settings → Devices & Services → Communal Grid → Configure** to update your gas rate at any time without reconfiguring the entire integration.
 
 ## Supported Utilities
 
