@@ -340,9 +340,9 @@ cards:
       {% set ns.models = ns.models + [mkey] %}
       {% endif %}
       {% endfor %}
-      {% for mkey in ns.models %}
+      {% for mkey in ns.models | sort %}
       - **{{ mkey | trim }}**
-      {% for d in vpp.matching_devices if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
+      {% for d in vpp.matching_devices | sort(attribute='name') if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
         - {{ d.name }}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
       {% endfor %}
       {% endfor %}
