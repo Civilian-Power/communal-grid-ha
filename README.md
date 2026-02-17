@@ -333,16 +333,16 @@ cards:
       {% if vpp.reward and vpp.reward.description %}
       💰 {{ vpp.reward.description }}
       {% endif %}
-      {% set ns = namespace(types=[]) %}
+      {% set ns = namespace(models=[]) %}
       {% for d in vpp.matching_devices %}
-      {% set dtype = d.der_type | replace('_', ' ') | title %}
-      {% if dtype not in ns.types %}
-      {% set ns.types = ns.types + [dtype] %}
+      {% set mkey = (d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown') %}
+      {% if mkey not in ns.models %}
+      {% set ns.models = ns.models + [mkey] %}
       {% endif %}
       {% endfor %}
-      {% for dtype in ns.types %}
-      - **{{ dtype }}**
-      {% for d in vpp.matching_devices if (d.der_type | replace('_', ' ') | title) == dtype %}
+      {% for mkey in ns.models %}
+      - **{{ mkey | trim }}**
+      {% for d in vpp.matching_devices if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
         - {{ d.name }}{% if d.current_power_w %} · ⚡ {{ d.current_power_w | round(0) }}W{% endif %}{% if d.estimated_annual_kwh %} ({{ d.estimated_annual_kwh | round(0) }} kWh/yr){% endif %}
       {% endfor %}
       {% endfor %}
