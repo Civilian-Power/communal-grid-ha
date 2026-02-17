@@ -171,6 +171,8 @@ cards:
 
 Shows which Virtual Power Plant programs are available in your region for your specific devices, with per-VPP qualifying device lists, power usage, and enrollment links.
 
+![VPP Matches Card](assets/CivPow-HA-VPP-matches.png)
+
 ```yaml
 type: vertical-stack
 cards:
