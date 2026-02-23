@@ -1428,6 +1428,233 @@
         "description": "Performance + capacity payments for battery dispatch during peak demand"
       },
       "active": true
+    },
+    {
+      "id": "oppd_smart_thermostat",
+      "name": "OPPD Smart Thermostat Program",
+      "provider": "Omaha Public Power District",
+      "description": "OPPD manages enrolled smart thermostats during peak summer demand (up to 15 weekdays, May–Oct) in exchange for bill credits.",
+      "regions": [
+        {
+          "state": "NE",
+          "utilities": [
+            "Omaha Public Power District"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.oppd.com/residential/products-services/smart-thermostat-program/",
+      "management_url": "https://solutions.oppd.com/",
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Google",
+          "models": [
+            "Nest Learning Thermostat",
+            "Nest Thermostat E",
+            "Nest Thermostat"
+          ],
+          "notes": "All Nest thermostat models"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Ecobee",
+          "models": [
+            "*"
+          ],
+          "notes": "All Ecobee models (eco+ must be activated)"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Honeywell",
+          "models": [
+            "*"
+          ],
+          "notes": "Honeywell Home Wi-Fi connected thermostats"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Emerson",
+          "models": [
+            "Sensi"
+          ],
+          "match_type": "prefix",
+          "notes": "Emerson Sensi Wi-Fi thermostats"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 130.0,
+        "currency": "USD",
+        "description": "$100 one-time bill credit per thermostat + $30 annual bill credit for continued participation"
+      },
+      "active": true
+    },
+    {
+      "id": "oppd_cool_smart",
+      "name": "OPPD Cool Smart",
+      "provider": "Omaha Public Power District",
+      "description": "OPPD installs a free load-control device on your AC or heat pump and cycles it in 15-minute intervals during peak events (up to 12 weekdays/year, 3–7 PM).",
+      "regions": [
+        {
+          "state": "NE",
+          "utilities": [
+            "Omaha Public Power District"
+          ]
+        }
+      ],
+      "enrollment_url": "https://oppd.com/residential/products-services/cool-smart/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Utility-installed load-control device on central AC or heat pump (not a smart thermostat — cannot combine with OPPD Smart Thermostat Program)"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 50.0,
+        "currency": "USD",
+        "description": "$30 one-time bill credit + $20 annual bill credit for continued participation"
+      },
+      "active": true
+    },
+    {
+      "id": "les_peak_rewards",
+      "name": "LES Peak Rewards",
+      "provider": "Lincoln Electric System",
+      "description": "LES makes brief thermostat adjustments (up to 4°F) during peak summer demand (June–Sept) to help delay the need for new generating resources.",
+      "regions": [
+        {
+          "state": "NE",
+          "utilities": [
+            "Lincoln Electric System"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.les.com/sustainability/les-peak-rewards",
+      "management_url": "https://www.thermostatrewards.com/lespeakrewards/",
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Google",
+          "models": [
+            "Nest Learning Thermostat",
+            "Nest Thermostat E",
+            "Nest Thermostat"
+          ],
+          "notes": "All Nest thermostat models"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Honeywell",
+          "models": [
+            "*"
+          ],
+          "notes": "Honeywell Home Wi-Fi connected thermostats"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Emerson",
+          "models": [
+            "Sensi"
+          ],
+          "match_type": "prefix",
+          "notes": "Emerson Sensi Wi-Fi thermostats"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Lux",
+          "models": [
+            "*"
+          ],
+          "notes": "Lux Wi-Fi connected thermostats"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Ecobee",
+          "models": [
+            "*"
+          ],
+          "notes": "All Ecobee models"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 50.0,
+        "currency": "USD",
+        "description": "$25 one-time gift card per thermostat + $25 annual bill credit for summer participation"
+      },
+      "active": true
+    },
+    {
+      "id": "nppd_energywise_thermostat",
+      "name": "NPPD EnergyWise Smart Thermostat",
+      "provider": "Nebraska Public Power District",
+      "description": "NPPD provides incentives through local wholesale utility partners for installing qualifying smart thermostats in homes with primary electric heat.",
+      "regions": [
+        {
+          "state": "NE",
+          "utilities": [
+            "Nebraska Public Power District"
+          ]
+        }
+      ],
+      "enrollment_url": "https://nppd.energywisenebraska.com/smart-thermostat/",
+      "management_url": "https://nppd.energywisenebraska.com/",
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Qualifying smart thermostats for homes with primary electric heat"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": 100.0,
+        "currency": "USD",
+        "description": "$100 incentive for professional installation of a qualifying smart thermostat"
+      },
+      "active": true
+    },
+    {
+      "id": "sppd_water_heater",
+      "name": "SPPD Water Heater Program",
+      "provider": "Southern Public Power District",
+      "description": "Southern Public Power District uses time clocks on electric water heaters to control heating elements during morning (8–10 AM) and evening (5–8 PM) peak periods. Over 1,100 units currently in service.",
+      "regions": [
+        {
+          "state": "NE",
+          "utilities": [
+            "Southern Public Power District"
+          ]
+        }
+      ],
+      "enrollment_url": "https://southernpd.com/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Electric water heaters with utility-installed time clock load control device"
+        }
+      ],
+      "reward": {
+        "type": "flat_monthly",
+        "value": null,
+        "currency": "USD",
+        "description": "Reduced rate for participating in peak load management"
+      },
+      "active": true
     }
   ]
 }
