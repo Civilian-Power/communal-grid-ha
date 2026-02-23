@@ -8,7 +8,14 @@
       "provider": "OhmConnect Inc.",
       "description": "Earn rewards for reducing energy during OhmHours — peak demand events signaled by the grid.",
       "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Pacific Gas & Electric",
+            "Southern California Edison",
+            "San Diego Gas & Electric"
+          ]
+        }
       ],
       "enrollment_url": "https://m13.me/0hmcnct",
       "management_url": "https://login.ohmconnect.com/",
@@ -16,78 +23,109 @@
         {
           "der_type": "smart_thermostat",
           "manufacturer": "Google",
-          "models": ["Nest Learning Thermostat", "Nest Thermostat E", "Nest Thermostat"],
+          "models": [
+            "Nest Learning Thermostat",
+            "Nest Thermostat E",
+            "Nest Thermostat"
+          ],
           "notes": "All Nest thermostat models"
         },
         {
           "der_type": "smart_thermostat",
           "manufacturer": "Ecobee",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "All Ecobee models"
         },
         {
           "der_type": "smart_thermostat",
           "manufacturer": "Honeywell",
-          "models": ["T9", "T10"],
+          "models": [
+            "T9",
+            "T10"
+          ],
           "match_type": "prefix",
           "notes": "Honeywell Home T9 and T10 series with Wi-Fi"
         },
         {
           "der_type": "smart_plug",
           "manufacturer": "TP-Link",
-          "models": ["KP115", "HS110", "HS300"],
+          "models": [
+            "KP115",
+            "HS110",
+            "HS300"
+          ],
           "notes": "Must have energy monitoring capability"
         },
         {
           "der_type": "smart_plug",
           "manufacturer": "Kasa",
-          "models": ["KP115", "HS110", "HS300"],
+          "models": [
+            "KP115",
+            "HS110",
+            "HS300"
+          ],
           "notes": "Kasa-branded versions of TP-Link energy monitoring plugs"
         },
         {
           "der_type": "smart_plug",
           "manufacturer": "WeMo",
-          "models": ["Insight"],
+          "models": [
+            "Insight"
+          ],
           "match_type": "prefix",
           "notes": "WeMo Insight smart plug with energy monitoring"
         },
         {
           "der_type": "ev_charger",
           "manufacturer": "ChargePoint",
-          "models": ["Home Flex"],
+          "models": [
+            "Home Flex"
+          ],
           "match_type": "prefix",
           "notes": "ChargePoint Home Flex Level 2"
         },
         {
           "der_type": "ev_charger",
           "manufacturer": "JuiceBox",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "All JuiceBox / Enel X Way models"
         },
         {
           "der_type": "smart_light",
           "manufacturer": "Philips",
-          "models": ["Hue"],
+          "models": [
+            "Hue"
+          ],
           "match_type": "prefix",
           "notes": "Philips Hue bulbs and fixtures"
         },
         {
           "der_type": "smart_light",
           "manufacturer": "LIFX",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "All LIFX models"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Rheem",
-          "models": ["EcoNet"],
+          "models": [
+            "EcoNet"
+          ],
           "match_type": "prefix",
           "notes": "Only Rheem models with EcoNet Wi-Fi technology"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Aquanta",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Aquanta smart water heater controller (retrofit)"
         }
       ],
@@ -105,8 +143,18 @@
       "provider": "Tesla Inc.",
       "description": "Powerwall owners export stored solar energy to the grid during peak demand in exchange for credits.",
       "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric"]},
-        {"state": "TX", "utilities": ["*"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Pacific Gas & Electric"
+          ]
+        },
+        {
+          "state": "TX",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://www.tesla.com/support/energy/virtual-power-plant",
       "management_url": "https://www.tesla.com/teslaaccount/energy",
@@ -114,14 +162,16 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "Tesla",
-          "models": ["Powerwall"],
+          "models": [
+            "Powerwall"
+          ],
           "match_type": "prefix",
           "notes": "All Powerwall generations (Powerwall 2, Powerwall+, Powerwall 3)"
         }
       ],
       "reward": {
         "type": "per_kwh",
-        "value": 2.00,
+        "value": 2.0,
         "currency": "USD",
         "description": "Up to $2/kWh exported during grid events (varies by utility and event)"
       },
@@ -133,7 +183,12 @@
       "provider": "Google LLC",
       "description": "Shifts thermostat energy usage to times when the grid has more clean energy or lower demand.",
       "regions": [
-        {"state": "*", "utilities": ["*"]}
+        {
+          "state": "*",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://store.google.com/us/category/nest_renew",
       "management_url": "https://home.nest.com/",
@@ -141,7 +196,11 @@
         {
           "der_type": "smart_thermostat",
           "manufacturer": "Google",
-          "models": ["Nest Learning Thermostat", "Nest Thermostat E", "Nest Thermostat"],
+          "models": [
+            "Nest Learning Thermostat",
+            "Nest Thermostat E",
+            "Nest Thermostat"
+          ],
           "notes": "Nest thermostats only (Google ecosystem)"
         }
       ],
@@ -159,9 +218,26 @@
       "provider": "Enphase Energy Inc.",
       "description": "Enphase battery owners can participate in grid services programs through their local utility.",
       "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]},
-        {"state": "CT", "utilities": ["*"]},
-        {"state": "MA", "utilities": ["*"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Pacific Gas & Electric",
+            "Southern California Edison",
+            "San Diego Gas & Electric"
+          ]
+        },
+        {
+          "state": "CT",
+          "utilities": [
+            "*"
+          ]
+        },
+        {
+          "state": "MA",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://greatergrid.com/enphase-battery-enroll",
       "management_url": "https://enlighten.enphaseenergy.com/",
@@ -169,7 +245,10 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "Enphase",
-          "models": ["IQ Battery", "Envoy"],
+          "models": [
+            "IQ Battery",
+            "Envoy"
+          ],
           "match_type": "prefix",
           "notes": "Enphase IQ Battery systems (HA may report via Envoy gateway)"
         }
@@ -188,8 +267,18 @@
       "provider": "sonnen Inc.",
       "description": "Sonnen battery owners share stored energy with the community and grid during peak demand.",
       "regions": [
-        {"state": "CA", "utilities": ["*"]},
-        {"state": "AZ", "utilities": ["*"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "*"
+          ]
+        },
+        {
+          "state": "AZ",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://sonnenusa.com/en/sonnenconnect/",
       "management_url": "https://my.sonnen.de/",
@@ -197,7 +286,11 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "sonnen",
-          "models": ["ecoLinx", "eco", "sonnenCore"],
+          "models": [
+            "ecoLinx",
+            "eco",
+            "sonnenCore"
+          ],
           "match_type": "prefix",
           "notes": "All sonnen residential battery systems"
         }
@@ -216,9 +309,26 @@
       "provider": "Sunrun Inc.",
       "description": "Sunrun solar+battery customers can participate in grid services to earn credits on their energy bill.",
       "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]},
-        {"state": "MA", "utilities": ["*"]},
-        {"state": "NY", "utilities": ["*"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Pacific Gas & Electric",
+            "Southern California Edison",
+            "San Diego Gas & Electric"
+          ]
+        },
+        {
+          "state": "MA",
+          "utilities": [
+            "*"
+          ]
+        },
+        {
+          "state": "NY",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://www.sunrun.com/solar-battery-storage/virtual-power-plants",
       "management_url": "https://www.sunrun.com/my-account",
@@ -226,21 +336,27 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "Sunrun",
-          "models": ["Brightbox"],
+          "models": [
+            "Brightbox"
+          ],
           "match_type": "prefix",
           "notes": "Sunrun Brightbox battery system"
         },
         {
           "der_type": "battery_storage",
           "manufacturer": "Tesla",
-          "models": ["Powerwall"],
+          "models": [
+            "Powerwall"
+          ],
           "match_type": "prefix",
           "notes": "Tesla Powerwall installed through Sunrun"
         },
         {
           "der_type": "battery_storage",
           "manufacturer": "LG",
-          "models": ["RESU"],
+          "models": [
+            "RESU"
+          ],
           "match_type": "prefix",
           "notes": "LG RESU battery installed through Sunrun"
         }
@@ -259,9 +375,24 @@
       "provider": "Generac Power Systems",
       "description": "Generac PWRcell and PWRview owners can participate in grid services through connected utilities.",
       "regions": [
-        {"state": "CA", "utilities": ["*"]},
-        {"state": "TX", "utilities": ["*"]},
-        {"state": "NY", "utilities": ["*"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "*"
+          ]
+        },
+        {
+          "state": "TX",
+          "utilities": [
+            "*"
+          ]
+        },
+        {
+          "state": "NY",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://www.generac.com/concerto",
       "management_url": "https://app.pwrfleet.com/",
@@ -269,7 +400,9 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "Generac",
-          "models": ["PWRcell"],
+          "models": [
+            "PWRcell"
+          ],
           "match_type": "prefix",
           "notes": "Generac PWRcell battery system"
         }
@@ -288,9 +421,25 @@
       "provider": "Swell Energy Inc.",
       "description": "Home battery aggregation for grid services in California and other markets.",
       "regions": [
-        {"state": "CA", "utilities": ["Southern California Edison", "Pacific Gas & Electric"]},
-        {"state": "HI", "utilities": ["*"]},
-        {"state": "NY", "utilities": ["*"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Southern California Edison",
+            "Pacific Gas & Electric"
+          ]
+        },
+        {
+          "state": "HI",
+          "utilities": [
+            "*"
+          ]
+        },
+        {
+          "state": "NY",
+          "utilities": [
+            "*"
+          ]
+        }
       ],
       "enrollment_url": "https://www.swellenergy.com/",
       "management_url": "https://app.swellenergy.com/",
@@ -298,21 +447,27 @@
         {
           "der_type": "battery_storage",
           "manufacturer": "Tesla",
-          "models": ["Powerwall"],
+          "models": [
+            "Powerwall"
+          ],
           "match_type": "prefix",
           "notes": "Tesla Powerwall through Swell Energy"
         },
         {
           "der_type": "battery_storage",
           "manufacturer": "Enphase",
-          "models": ["IQ Battery"],
+          "models": [
+            "IQ Battery"
+          ],
           "match_type": "prefix",
           "notes": "Enphase IQ Battery through Swell Energy"
         },
         {
           "der_type": "battery_storage",
           "manufacturer": "FranklinWH",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "FranklinWH battery through Swell Energy"
         }
       ],
@@ -330,7 +485,12 @@
       "provider": "Virtual Peaker / PG&E",
       "description": "Daily load-shifting program for water heaters. Automatically heats water when grid demand and electricity rates are lower, helping avoid outages and use more clean energy.",
       "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Pacific Gas & Electric"
+          ]
+        }
       ],
       "enrollment_url": "https://www.watter-saver.com/signup/",
       "management_url": "https://www.watter-saver.com/",
@@ -338,49 +498,65 @@
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Rheem",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Wi-Fi enabled Rheem/Ruud heat pump water heaters"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Ruud",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Wi-Fi enabled Ruud heat pump water heaters (Rheem brand)"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "A.O. Smith",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Wi-Fi or CTA-2045 compatible A.O. Smith water heaters"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "State",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "CTA-2045 compatible State water heaters (A.O. Smith brand)"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "American",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "CTA-2045 compatible American water heaters (A.O. Smith brand)"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Reliance",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "CTA-2045 compatible Reliance water heaters (A.O. Smith brand)"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Richmond",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Wi-Fi or CTA-2045 compatible Richmond water heaters"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "Ariston",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Wi-Fi or CTA-2045 compatible Ariston water heaters"
         }
       ],
@@ -398,7 +574,14 @@
       "provider": "Olivine Inc.",
       "description": "Behavioral VPP that notifies participants when energy prices, emissions, or grid stress are high, and rewards actions taken to reduce consumption during those periods.",
       "regions": [
-        {"state": "CA", "utilities": ["Pacific Gas & Electric", "Southern California Edison", "San Diego Gas & Electric"]}
+        {
+          "state": "CA",
+          "utilities": [
+            "Pacific Gas & Electric",
+            "Southern California Edison",
+            "San Diego Gas & Electric"
+          ]
+        }
       ],
       "enrollment_url": "https://www.climateresponse.com/",
       "management_url": "https://www.climateresponse.com/",
@@ -406,31 +589,41 @@
         {
           "der_type": "smart_thermostat",
           "manufacturer": "*",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Any connected thermostat; reduce HVAC during events"
         },
         {
           "der_type": "ev_charger",
           "manufacturer": "*",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Any EV charger; shift charging to off-peak"
         },
         {
           "der_type": "battery_storage",
           "manufacturer": "*",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Any home battery system"
         },
         {
           "der_type": "smart_water_heater",
           "manufacturer": "*",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Any connected water heater; includes thermal storage"
         },
         {
           "der_type": "smart_plug",
           "manufacturer": "*",
-          "models": ["*"],
+          "models": [
+            "*"
+          ],
           "notes": "Any smart plug with energy monitoring"
         }
       ],
@@ -439,6 +632,800 @@
         "value": null,
         "currency": "USD",
         "description": "Incentives for participation during grid events; no commitment, disenroll anytime"
+      },
+      "active": true
+    },
+    {
+      "id": "connected_solutions",
+      "name": "ConnectedSolutions",
+      "provider": "Tesla / Sunrun / Generac",
+      "description": "Battery dispatch program where enrolled home batteries are discharged during peak demand events called by the utility.",
+      "regions": [
+        {
+          "state": "MA",
+          "utilities": [
+            "National Grid",
+            "Eversource",
+            "Cape Light Compact"
+          ]
+        },
+        {
+          "state": "RI",
+          "utilities": [
+            "RI Energy"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.connectedsolutions.energy/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "All Tesla Powerwall generations"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "SolarEdge",
+          "models": [
+            "*"
+          ],
+          "notes": "SolarEdge home battery systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "LG",
+          "models": [
+            "RESU"
+          ],
+          "match_type": "prefix",
+          "notes": "LG RESU battery systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Enphase",
+          "models": [
+            "IQ Battery",
+            "Envoy"
+          ],
+          "match_type": "prefix",
+          "notes": "Enphase IQ Battery systems (HA may report via Envoy gateway)"
+        }
+      ],
+      "reward": {
+        "type": "per_kw",
+        "value": null,
+        "currency": "USD",
+        "description": "$225–$275/kW performance payment based on battery capacity dispatched"
+      },
+      "active": true
+    },
+    {
+      "id": "calready",
+      "name": "CalReady",
+      "provider": "Sunrun Inc.",
+      "description": "Sunrun solar+battery customers in California participate in grid services through coordinated battery dispatch during peak demand.",
+      "regions": [
+        {
+          "state": "CA",
+          "utilities": [
+            "*"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.sunrun.com/solar-plans/calready",
+      "management_url": "https://www.sunrun.com/my-account",
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Sunrun",
+          "models": [
+            "Brightbox"
+          ],
+          "match_type": "prefix",
+          "notes": "Sunrun Brightbox solar + battery system"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall installed through Sunrun"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Performance payments for battery dispatch during grid events"
+      },
+      "active": true
+    },
+    {
+      "id": "peaktime_perks",
+      "name": "PeakTime Perks",
+      "provider": "CoServ / Tesla",
+      "description": "Powerwall owners on CoServ Electric earn monthly credits by allowing battery dispatch during peak demand periods.",
+      "regions": [
+        {
+          "state": "TX",
+          "utilities": [
+            "CoServ Electric"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.coserv.com/peaktimeperks",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "All Tesla Powerwall generations"
+        }
+      ],
+      "reward": {
+        "type": "flat_monthly",
+        "value": 30.0,
+        "currency": "USD",
+        "description": "$30/month per enrolled Powerwall"
+      },
+      "active": true
+    },
+    {
+      "id": "gvec_peak_time_payback",
+      "name": "GVEC Peak-Time Payback",
+      "provider": "GVEC / Tesla",
+      "description": "Guadalupe Valley Electric cooperative partners with Tesla to offer Powerwall owners upfront and annual payments for grid support.",
+      "regions": [
+        {
+          "state": "TX",
+          "utilities": [
+            "Guadalupe Valley Electric"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.gvec.org/peak-time-payback/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "All Tesla Powerwall generations (Powerwall 3 eligible for higher rate)"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 862.0,
+        "currency": "USD",
+        "description": "$2,530 upfront + $862/year for Powerwall 3 participants"
+      },
+      "active": true
+    },
+    {
+      "id": "renewable_battery_connect",
+      "name": "Renewable Battery Connect",
+      "provider": "Xcel Energy / Enphase",
+      "description": "Xcel Energy customers in Colorado earn upfront incentives for enrolling compatible home batteries in grid support events.",
+      "regions": [
+        {
+          "state": "CO",
+          "utilities": [
+            "Xcel Energy"
+          ]
+        }
+      ],
+      "enrollment_url": "https://co.my.xcelenergy.com/s/renewable/battery-connect",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Enphase",
+          "models": [
+            "IQ Battery",
+            "Envoy"
+          ],
+          "match_type": "prefix",
+          "notes": "Enphase IQ Battery systems (HA may report via Envoy gateway)"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "SolarEdge",
+          "models": [
+            "*"
+          ],
+          "notes": "SolarEdge home battery systems"
+        }
+      ],
+      "reward": {
+        "type": "per_kw",
+        "value": 350.0,
+        "currency": "USD",
+        "description": "$350/kW upfront incentive, capped at $5,000"
+      },
+      "active": true
+    },
+    {
+      "id": "ct_energy_storage_solutions",
+      "name": "Energy Storage Solutions",
+      "provider": "CT Green Bank",
+      "description": "Connecticut Green Bank offers rebates and performance payments for residential battery installations enrolled in grid services.",
+      "regions": [
+        {
+          "state": "CT",
+          "utilities": [
+            "Eversource",
+            "United Illuminating"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.ctgreenbank.com/programs/energy-storage-solutions/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "SolarEdge",
+          "models": [
+            "*"
+          ],
+          "notes": "SolarEdge home battery systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Enphase",
+          "models": [
+            "IQ Battery",
+            "Envoy"
+          ],
+          "match_type": "prefix",
+          "notes": "Enphase IQ Battery systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "sonnen",
+          "models": [
+            "*"
+          ],
+          "notes": "sonnen battery systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Generac",
+          "models": [
+            "PWRcell"
+          ],
+          "match_type": "prefix",
+          "notes": "Generac PWRcell battery systems"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Upfront rebate plus annual performance payments for grid event participation"
+      },
+      "active": true
+    },
+    {
+      "id": "luma_bedrp",
+      "name": "LUMA BEDRP",
+      "provider": "LUMA Energy / Sunnova",
+      "description": "Puerto Rico battery export demand response program where solar+battery owners export stored energy during grid events.",
+      "regions": [
+        {
+          "state": "PR",
+          "utilities": [
+            "LUMA Energy"
+          ]
+        }
+      ],
+      "enrollment_url": "https://lumapr.com/bedrp/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Solar + battery systems enrolled through Sunnova or approved installers"
+        }
+      ],
+      "reward": {
+        "type": "per_kwh",
+        "value": 1.0,
+        "currency": "USD",
+        "description": "$1.00/kWh delivered to the grid during demand response events"
+      },
+      "active": true
+    },
+    {
+      "id": "duke_power_pair",
+      "name": "Power Pair",
+      "provider": "Duke Energy",
+      "description": "Duke Energy offers upfront rebates and monthly payments to residential solar+storage customers who allow battery dispatch during peak events.",
+      "regions": [
+        {
+          "state": "NC",
+          "utilities": [
+            "Duke Energy"
+          ]
+        },
+        {
+          "state": "SC",
+          "utilities": [
+            "Duke Energy"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.duke-energy.com/home/products/power-pair",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Residential solar + storage systems approved by Duke Energy"
+        }
+      ],
+      "reward": {
+        "type": "flat_monthly",
+        "value": null,
+        "currency": "USD",
+        "description": "Upfront rebate plus monthly bill credits for grid event participation"
+      },
+      "active": true
+    },
+    {
+      "id": "wattsmart_battery",
+      "name": "Wattsmart Battery",
+      "provider": "Rocky Mountain Power",
+      "description": "PacifiCorp customers earn upfront incentives and bill credits for enrolling home batteries in grid support programs.",
+      "regions": [
+        {
+          "state": "ID",
+          "utilities": [
+            "PacifiCorp"
+          ]
+        },
+        {
+          "state": "OR",
+          "utilities": [
+            "PacifiCorp"
+          ]
+        },
+        {
+          "state": "UT",
+          "utilities": [
+            "PacifiCorp"
+          ]
+        },
+        {
+          "state": "WA",
+          "utilities": [
+            "PacifiCorp"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.rockymountainpower.net/savings-energy-choices/wattsmart-battery.html",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "sonnen",
+          "models": [
+            "*"
+          ],
+          "notes": "sonnen residential battery systems"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall systems"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": null,
+        "currency": "USD",
+        "description": "Upfront incentive plus ongoing bill credits for grid event participation"
+      },
+      "active": true
+    },
+    {
+      "id": "peak_perks_ontario",
+      "name": "Peak Perks",
+      "provider": "IESO / EnergyHub",
+      "description": "Ontario residents earn rewards for allowing brief thermostat adjustments during peak electricity demand periods.",
+      "regions": [
+        {
+          "state": "ON",
+          "utilities": [
+            "Hydro One",
+            "Toronto Hydro",
+            "Alectra Utilities"
+          ]
+        }
+      ],
+      "enrollment_url": "https://saveonenergy.ca/peak-perks",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Google",
+          "models": [
+            "Nest Learning Thermostat",
+            "Nest Thermostat E",
+            "Nest Thermostat"
+          ],
+          "notes": "All Nest thermostat models"
+        },
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "Ecobee",
+          "models": [
+            "*"
+          ],
+          "notes": "All Ecobee models"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": 95.0,
+        "currency": "CAD",
+        "description": "$75 upfront enrollment bonus + $20/year ongoing participation reward"
+      },
+      "active": true
+    },
+    {
+      "id": "hilo_quebec",
+      "name": "Hilo",
+      "provider": "Hydro-Québec / Hilo",
+      "description": "Hydro-Québec's smart energy program rewards participants for reducing consumption during winter peak demand challenges.",
+      "regions": [
+        {
+          "state": "QC",
+          "utilities": [
+            "Hydro-Québec"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.hiloenergie.com/en/",
+      "management_url": "https://www.hiloenergie.com/en/",
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Hilo-compatible smart thermostats"
+        },
+        {
+          "der_type": "smart_water_heater",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Connected water heaters"
+        }
+      ],
+      "reward": {
+        "type": "per_kwh",
+        "value": null,
+        "currency": "CAD",
+        "description": "Cash rewards per kWh saved during Hilo challenges (winter peak events)"
+      },
+      "active": true
+    },
+    {
+      "id": "peak_saver_bc",
+      "name": "Peak Saver",
+      "provider": "BC Hydro",
+      "description": "BC Hydro customers earn enrollment bonuses and annual credits for allowing brief thermostat adjustments during peak demand.",
+      "regions": [
+        {
+          "state": "BC",
+          "utilities": [
+            "BC Hydro"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.bchydro.com/powersmart/residential/peak-saver.html",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "smart_thermostat",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Compatible smart thermostats and load controllers"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": null,
+        "currency": "CAD",
+        "description": "Up to $100 enrollment bonus + $50/year for participation"
+      },
+      "active": true
+    },
+    {
+      "id": "eco_shift_ns",
+      "name": "Eco Shift",
+      "provider": "Efficiency Nova Scotia / Enphase",
+      "description": "Nova Scotia battery owners earn upfront and per-kW incentives for enrolling Enphase batteries in grid support.",
+      "regions": [
+        {
+          "state": "NS",
+          "utilities": [
+            "Efficiency Nova Scotia"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.efficiencyns.ca/eco-shift/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Enphase",
+          "models": [
+            "IQ Battery",
+            "Envoy"
+          ],
+          "match_type": "prefix",
+          "notes": "Enphase IQ Battery systems (HA may report via Envoy gateway)"
+        }
+      ],
+      "reward": {
+        "type": "per_kw",
+        "value": 300.0,
+        "currency": "CAD",
+        "description": "$500 upfront + $300/kW incentive for enrolled batteries"
+      },
+      "active": true
+    },
+    {
+      "id": "swtch_home_charging",
+      "name": "Home Charging Program",
+      "provider": "SWTCH Energy",
+      "description": "Earn per-kWh credits for smart EV charging that shifts load to off-peak hours, with a free Level 2 charger for qualifying participants.",
+      "regions": [
+        {
+          "state": "BC",
+          "utilities": [
+            "BC Hydro"
+          ]
+        },
+        {
+          "state": "ON",
+          "utilities": [
+            "*"
+          ]
+        }
+      ],
+      "enrollment_url": "https://swtchenergy.com/home-charging/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "ev_charger",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "SWTCH-compatible smart EV chargers"
+        }
+      ],
+      "reward": {
+        "type": "per_kwh",
+        "value": 0.03,
+        "currency": "CAD",
+        "description": "Free Level 2 charger + 3¢/kWh credit for managed charging sessions"
+      },
+      "active": true
+    },
+    {
+      "id": "aps_storage_rewards",
+      "name": "APS Storage Rewards",
+      "provider": "Arizona Public Service",
+      "description": "APS customers with home batteries earn performance payments for allowing dispatch during peak demand events.",
+      "regions": [
+        {
+          "state": "AZ",
+          "utilities": [
+            "Arizona Public Service"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.aps.com/en/Residential/Service-Plans/Storage-Rewards",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Residential battery systems approved by APS"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Performance payments for battery dispatch during peak demand events"
+      },
+      "active": true
+    },
+    {
+      "id": "elk_neck_pilot",
+      "name": "Elk Neck Pilot",
+      "provider": "Delmarva Power",
+      "description": "Delmarva Power pilot program providing free batteries and on-bill credits for residential grid support participation.",
+      "regions": [
+        {
+          "state": "MD",
+          "utilities": [
+            "Delmarva Power"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.delmarva.com/ElkNeck",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Residential batteries provided or approved by Delmarva Power"
+        }
+      ],
+      "reward": {
+        "type": "flat_monthly",
+        "value": null,
+        "currency": "USD",
+        "description": "Free battery installation + on-bill credits for grid event participation"
+      },
+      "active": true
+    },
+    {
+      "id": "efficiency_maine_battery",
+      "name": "Small Battery Initiative",
+      "provider": "Efficiency Maine",
+      "description": "Efficiency Maine offers performance incentives for residential battery owners participating in grid support programs.",
+      "regions": [
+        {
+          "state": "ME",
+          "utilities": [
+            "Efficiency Maine"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.efficiencymaine.com/battery/",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "*",
+          "models": [
+            "*"
+          ],
+          "notes": "Residential battery systems approved by Efficiency Maine"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Performance incentive for grid event participation"
+      },
+      "active": true
+    },
+    {
+      "id": "or_battery_pilot",
+      "name": "O&R Battery Pilot",
+      "provider": "Sunrun / Orange & Rockland",
+      "description": "Orange & Rockland partners with Sunrun to offer free or discounted batteries for residential grid support in New York.",
+      "regions": [
+        {
+          "state": "NY",
+          "utilities": [
+            "Orange & Rockland"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.oru.com/battery-pilot",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Sunrun",
+          "models": [
+            "Brightbox"
+          ],
+          "match_type": "prefix",
+          "notes": "Sunrun Brightbox solar + battery system"
+        },
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall installed through Sunrun"
+        }
+      ],
+      "reward": {
+        "type": "flat_yearly",
+        "value": null,
+        "currency": "USD",
+        "description": "Free or discounted battery installation for grid support participation"
+      },
+      "active": true
+    },
+    {
+      "id": "pseg_battery_rewards",
+      "name": "PSEG Battery Rewards",
+      "provider": "PSEG Long Island",
+      "description": "PSEG Long Island Powerwall owners earn performance and capacity payments for allowing battery dispatch during peak events.",
+      "regions": [
+        {
+          "state": "NY",
+          "utilities": [
+            "PSEG Long Island"
+          ]
+        }
+      ],
+      "enrollment_url": "https://www.psegliny.com/saveenergyandmoney/battery",
+      "management_url": null,
+      "supported_devices": [
+        {
+          "der_type": "battery_storage",
+          "manufacturer": "Tesla",
+          "models": [
+            "Powerwall"
+          ],
+          "match_type": "prefix",
+          "notes": "Tesla Powerwall systems"
+        }
+      ],
+      "reward": {
+        "type": "per_event",
+        "value": null,
+        "currency": "USD",
+        "description": "Performance + capacity payments for battery dispatch during peak demand"
       },
       "active": true
     }
