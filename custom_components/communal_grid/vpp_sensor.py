@@ -162,6 +162,7 @@ class VPPMatchSensor(
         self._attr_unique_id = f"{entry.entry_id}_{SENSOR_VPP_MATCHES}"
         self._match_results: list[dict[str, Any]] = []
         self._unmatched_count: int = 0
+        self._has_computed: bool = False
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -173,8 +174,13 @@ class VPPMatchSensor(
 
     @property
     def native_value(self) -> int | None:
-        """Return the count of matching VPP programs."""
-        if self.coordinator.data is None:
+        """Return the count of matching VPP programs.
+
+        Returns None (renders as 'unknown' in HA) until the first
+        match computation finishes, so dashboard cards can show a
+        loading state instead of '0 programs'.
+        """
+        if self.coordinator.data is None or not self._has_computed:
             return None
         return len(self._match_results)
 
@@ -312,6 +318,7 @@ class VPPMatchSensor(
 
         self._match_results = results
         self._unmatched_count = len(all_devices) - len(matched_device_ids)
+        self._has_computed = True
 
     def _gather_devices(self) -> list[dict[str, Any]]:
         """Gather all discovered devices and resolve their DER type IDs.
