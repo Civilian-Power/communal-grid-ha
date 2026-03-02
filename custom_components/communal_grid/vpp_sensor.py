@@ -32,6 +32,76 @@ from .vpp import VPPRegistry
 
 _LOGGER = logging.getLogger(__name__)
 
+# Population-weighted centroids for US states, DC, territories, and
+# Canadian provinces. Used to derive user's state/province from HA
+# home lat/lon coordinates without any external API call.
+_US_STATE_CENTROIDS: dict[str, tuple[float, float]] = {
+    "AL": (33.0, -86.8), "AK": (61.2, -149.9), "AZ": (33.5, -112.0),
+    "AR": (34.8, -92.2), "CA": (36.8, -119.8), "CO": (39.7, -105.0),
+    "CT": (41.6, -72.7), "DE": (39.2, -75.5), "FL": (28.1, -81.6),
+    "GA": (33.3, -83.8), "HI": (21.3, -157.8), "ID": (43.6, -114.7),
+    "IL": (40.0, -89.2), "IN": (39.8, -86.3), "IA": (41.9, -93.1),
+    "KS": (38.5, -97.3), "KY": (38.0, -85.7), "LA": (30.5, -91.2),
+    "ME": (44.0, -69.8), "MD": (39.0, -76.8), "MA": (42.3, -71.8),
+    "MI": (42.7, -84.6), "MN": (45.0, -93.5), "MS": (32.4, -89.7),
+    "MO": (38.6, -92.6), "MT": (46.9, -110.4), "NE": (41.1, -96.5),
+    "NV": (39.5, -119.8), "NH": (43.2, -71.6), "NJ": (40.2, -74.7),
+    "NM": (35.1, -106.6), "NY": (42.2, -74.8), "NC": (35.5, -79.4),
+    "ND": (46.8, -100.8), "OH": (40.1, -82.7), "OK": (35.5, -97.5),
+    "OR": (44.0, -121.0), "PA": (40.6, -77.2), "RI": (41.7, -71.5),
+    "SC": (34.0, -81.0), "SD": (43.9, -99.4), "TN": (35.8, -86.3),
+    "TX": (31.5, -97.0), "UT": (40.5, -111.9), "VT": (44.0, -72.7),
+    "VA": (37.5, -78.9), "WA": (47.4, -121.3), "WV": (38.6, -80.6),
+    "WI": (43.8, -89.4), "WY": (42.8, -107.6),
+    "DC": (38.9, -77.0),
+    "PR": (18.2, -66.5), "GU": (13.4, 144.8), "VI": (18.3, -64.8),
+}
+
+_CA_PROVINCE_CENTROIDS: dict[str, tuple[float, float]] = {
+    "ON": (43.7, -79.4), "QC": (46.8, -71.2), "BC": (49.3, -123.1),
+    "AB": (51.0, -114.1), "SK": (50.5, -104.6), "MB": (49.9, -97.1),
+    "NB": (46.5, -66.5), "NS": (44.6, -63.6), "PE": (46.2, -63.0),
+    "NL": (47.6, -52.7), "YT": (60.7, -135.0), "NT": (62.5, -114.4),
+    "NU": (63.7, -68.5),
+}
+
+
+def _get_user_state(hass) -> str | None:
+    """Derive the user's state/province code from HA home location.
+
+    Uses hass.config.country to determine US vs Canada, then finds
+    the nearest population-weighted centroid. No external API call.
+    """
+    lat = hass.config.latitude
+    lon = hass.config.longitude
+    if not lat or not lon:
+        return None
+
+    # Use HA country setting to pick the right centroid table.
+    country = getattr(hass.config, "country", None) or ""
+    if country.upper() == "CA":
+        search = _CA_PROVINCE_CENTROIDS
+    elif country.upper() in ("US", "USA", ""):
+        # Default to US when country not set (most HA installs are US)
+        search = _US_STATE_CENTROIDS
+    else:
+        # Unknown country — search both tables
+        search = {**_US_STATE_CENTROIDS, **_CA_PROVINCE_CENTROIDS}
+
+    best_state: str | None = None
+    best_dist = float("inf")
+    for code, (clat, clon) in search.items():
+        dist = (lat - clat) ** 2 + (lon - clon) ** 2
+        if dist < best_dist:
+            best_dist = dist
+            best_state = code
+
+    _LOGGER.debug(
+        "Derived user state from HA location (%.2f, %.2f, country=%s): %s",
+        lat, lon, country, best_state,
+    )
+    return best_state
+
 # Map device_type from the Controllable Devices sensor to the category
 # plurals used as keys in the coordinator data dict.
 _CATEGORY_KEYS = [
@@ -152,8 +222,12 @@ class VPPMatchSensor(
             self._unmatched_count = 0
             return
 
+        # Derive user's state/province from HA home location
+        user_state = _get_user_state(self.hass)
+
         # Get VPPs that serve this utility's region
         regional_vpps = self._vpp_registry.get_vpps_for_region(
+            state=user_state,
             utility=utility_name,
             active_only=True,
         )
