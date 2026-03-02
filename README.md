@@ -186,8 +186,11 @@ cards:
     custom_fields:
       count: |
         [[[
-          const n = entity.state;
-          if (n == 0) return 'No matching programs found';
+          const s = entity.state;
+          if (s === 'unavailable' || s === 'unknown' || s === undefined)
+            return 'Discovering devices…';
+          const n = Number(s);
+          if (n === 0) return 'No matching programs found';
           return `${n} program${n > 1 ? 's' : ''} match your devices`;
         ]]]
       utility: |
@@ -262,7 +265,7 @@ cards:
       {% endfor %}
       {% endif %}
       {% else %}
-      *VPP matching data not available yet. Waiting for device discovery...*
+      *Discovering your devices and matching VPP programs…*
       {% endif %}
 ```
 
