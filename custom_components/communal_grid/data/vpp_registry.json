@@ -17,7 +17,7 @@
           ]
         }
       ],
-      "enrollment_url": "https://m13.me/0hmcnct",
+      "enrollment_url": "https://app.ohmconnect.com/signup/account",
       "management_url": "https://login.ohmconnect.com/",
       "supported_devices": [
         {
@@ -1233,8 +1233,8 @@
           ]
         }
       ],
-      "enrollment_url": "https://swtchenergy.com/home-charging/",
-      "management_url": null,
+      "enrollment_url": "https://shop.swtchenergy.com/",
+      "management_url": "https://shop.swtchenergy.com/customer_authentication/redirect?locale=en&region_country=CA",
       "supported_devices": [
         {
           "der_type": "ev_charger",
