@@ -179,10 +179,10 @@ cards:
   - type: custom:button-card
     entity: sensor.communal_grid_vpp_matches
     layout: vertical
-    name: VPP Programs
+    name: Available VPP Programs
     show_state: false
     show_icon: true
-    icon: mdi:lightning-bolt-circle
+    icon: mdi:leaf-circle-outline
     custom_fields:
       count: |
         [[[
@@ -190,26 +190,30 @@ cards:
           if (s === 'unavailable' || s === 'unknown' || s === undefined)
             return 'Discovering devices…';
           const n = Number(s);
-          if (n === 0) return 'No matching programs found';
-          return `${n} program${n > 1 ? 's' : ''} match your devices`;
+          if (n === 0) return 'No eligible programs found';
+          return `${n} eligible program${n > 1 ? 's' : ''} found`;
         ]]]
-      utility: |
+      subtitle: |
         [[[
-          const u = entity.attributes.utility_name || '';
-          return u ? `Utility: ${u}` : '';
+          const s = entity.state;
+          if (s === 'unavailable' || s === 'unknown' || s === undefined)
+            return '';
+          const n = Number(s);
+          if (n === 0) return '';
+          return 'Enroll in 1 or more to start earning ASAP';
         ]]]
     styles:
       grid:
-        - grid-template-areas: '"i" "n" "count" "utility"'
+        - grid-template-areas: '"i" "n" "count" "subtitle"'
         - grid-template-rows: auto auto auto auto
       card:
         - border-radius: 16px 16px 0 0
         - padding: 20px
-        - background: 'linear-gradient(135deg, #059669, #047857)'
-        - color: white
+        - background: '#FFD400'
+        - color: '#1a1a1a'
       icon:
         - width: 32px
-        - color: white
+        - color: '#1a1a1a'
       name:
         - font-size: 14px
         - opacity: '0.9'
@@ -220,9 +224,9 @@ cards:
           - font-size: 24px
           - font-weight: bold
           - margin-top: 8px
-        utility:
+        subtitle:
           - font-size: 13px
-          - opacity: '0.8'
+          - opacity: '0.7'
           - margin-top: 4px
   - type: markdown
     content: |
@@ -260,7 +264,7 @@ cards:
       </details>
       {% endfor %}
       {% if vpp.enrollment_url %}
-      <a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:8px 20px;background:#059669;color:white;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll →</a>
+      <a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:10px 24px;background:#FFD400;color:#1a1a1a;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll</a>
       {% endif %}
       {% endfor %}
       {% endif %}
