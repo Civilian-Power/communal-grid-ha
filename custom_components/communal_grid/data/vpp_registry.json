@@ -1,12 +1,12 @@
 {
   "_schema_version": "2.0",
-  "_description": "Virtual Power Plant (VPP) registry. Each entry represents a VPP program that residential customers can enroll in. The supported_devices array specifies exactly which manufacturer/model combinations are compatible — use '*' for wildcards, 'prefix' match_type for model families.",
+  "_description": "Virtual Power Plant (VPP) registry. Each entry represents a VPP program that residential customers can enroll in. The supported_devices array specifies exactly which manufacturer/model combinations are compatible \u2014 use '*' for wildcards, 'prefix' match_type for model families.",
   "vpps": [
     {
       "id": "ohmconnect",
       "name": "OhmConnect",
       "provider": "OhmConnect Inc.",
-      "description": "Earn rewards for reducing energy during OhmHours — peak demand events signaled by the grid.",
+      "description": "Earn rewards for reducing energy during OhmHours \u2014 peak demand events signaled by the grid.",
       "regions": [
         {
           "state": "CA",
@@ -18,6 +18,7 @@
         }
       ],
       "enrollment_url": "https://app.ohmconnect.com/signup/account",
+      "learn_more": "https://www.ohmconnect.com/how-it-works",
       "management_url": "https://login.ohmconnect.com/",
       "supported_devices": [
         {
@@ -157,6 +158,7 @@
         }
       ],
       "enrollment_url": "https://www.tesla.com/support/energy/virtual-power-plant",
+      "learn_more": "https://www.tesla.com/learn/what-is-a-virtual-power-plant",
       "management_url": "https://www.tesla.com/teslaaccount/energy",
       "supported_devices": [
         {
@@ -191,6 +193,7 @@
         }
       ],
       "enrollment_url": "https://store.google.com/us/category/nest_renew",
+      "learn_more": "https://nestrenew.google.com/blog/virtual-power-plants/",
       "management_url": "https://home.nest.com/",
       "supported_devices": [
         {
@@ -240,6 +243,7 @@
         }
       ],
       "enrollment_url": "https://greatergrid.com/enphase-battery-enroll",
+      "learn_more": "https://enphase.com/installers/grid-services",
       "management_url": "https://enlighten.enphaseenergy.com/",
       "supported_devices": [
         {
@@ -281,6 +285,7 @@
         }
       ],
       "enrollment_url": "https://sonnenusa.com/en/sonnenconnect/",
+      "learn_more": "https://www.sonnenusa.com/virtual-power-plant",
       "management_url": "https://my.sonnen.de/",
       "supported_devices": [
         {
@@ -331,6 +336,7 @@
         }
       ],
       "enrollment_url": "https://www.sunrun.com/solar-battery-storage/virtual-power-plants",
+      "learn_more": "https://www.sunrun.com/go-solar-center/the-future-of-power-plants",
       "management_url": "https://www.sunrun.com/my-account",
       "supported_devices": [
         {
@@ -395,6 +401,7 @@
         }
       ],
       "enrollment_url": "https://www.generac.com/concerto",
+      "learn_more": "https://www.generacgs.com/concerto/",
       "management_url": "https://app.pwrfleet.com/",
       "supported_devices": [
         {
@@ -442,6 +449,7 @@
         }
       ],
       "enrollment_url": "https://www.swellenergy.com/",
+      "learn_more": null,
       "management_url": "https://app.swellenergy.com/",
       "supported_devices": [
         {
@@ -493,6 +501,7 @@
         }
       ],
       "enrollment_url": "https://www.watter-saver.com/signup/",
+      "learn_more": "https://www.watter-saver.com/how-it-works/",
       "management_url": "https://www.watter-saver.com/",
       "supported_devices": [
         {
@@ -584,6 +593,7 @@
         }
       ],
       "enrollment_url": "https://www.climateresponse.com/",
+      "learn_more": "https://www.climateresponse.com/",
       "management_url": "https://www.climateresponse.com/",
       "supported_devices": [
         {
@@ -657,6 +667,7 @@
         }
       ],
       "enrollment_url": "https://www.connectedsolutions.energy/",
+      "learn_more": "https://www.nationalgridus.com/connectedsolutions",
       "management_url": null,
       "supported_devices": [
         {
@@ -700,7 +711,7 @@
         "type": "per_kw",
         "value": null,
         "currency": "USD",
-        "description": "$225–$275/kW performance payment based on battery capacity dispatched"
+        "description": "$225\u2013$275/kW performance payment based on battery capacity dispatched"
       },
       "active": true
     },
@@ -718,6 +729,7 @@
         }
       ],
       "enrollment_url": "https://www.sunrun.com/solar-plans/calready",
+      "learn_more": "https://www.sunrun.com/calready",
       "management_url": "https://www.sunrun.com/my-account",
       "supported_devices": [
         {
@@ -761,6 +773,7 @@
         }
       ],
       "enrollment_url": "https://www.coserv.com/peaktimeperks",
+      "learn_more": "https://www.coserv.com/energy-solutions/peaktime-perks/",
       "management_url": null,
       "supported_devices": [
         {
@@ -795,6 +808,7 @@
         }
       ],
       "enrollment_url": "https://www.gvec.org/peak-time-payback/",
+      "learn_more": "https://www.gvec.org/peak-time-payback-what-it-is-why-it-matters-how-to-join/",
       "management_url": null,
       "supported_devices": [
         {
@@ -829,6 +843,7 @@
         }
       ],
       "enrollment_url": "https://co.my.xcelenergy.com/s/renewable/battery-connect",
+      "learn_more": "https://www.xcelenergy.com/staticfiles/xe-responsive/Environment/Renewable%20Energy/23-04-510_CO-RenewableBattery_is_P02.pdf",
       "management_url": null,
       "supported_devices": [
         {
@@ -873,6 +888,7 @@
         }
       ],
       "enrollment_url": "https://www.ctgreenbank.com/programs/energy-storage-solutions/",
+      "learn_more": "https://www.ctgreenbank.com/home-solutions/energy-storage-solutions/",
       "management_url": null,
       "supported_devices": [
         {
@@ -942,6 +958,7 @@
         }
       ],
       "enrollment_url": "https://lumapr.com/bedrp/",
+      "learn_more": "https://lumapr.com/battery-demand-response/?lang=en",
       "management_url": null,
       "supported_devices": [
         {
@@ -981,6 +998,7 @@
         }
       ],
       "enrollment_url": "https://www.duke-energy.com/home/products/power-pair",
+      "learn_more": "https://www.duke-energy.com/home/products/powerpair",
       "management_url": null,
       "supported_devices": [
         {
@@ -1032,6 +1050,7 @@
         }
       ],
       "enrollment_url": "https://www.rockymountainpower.net/savings-energy-choices/wattsmart-battery.html",
+      "learn_more": "https://www.rockymountainpower.net/savings-energy-choices/wattsmart-battery-program.html",
       "management_url": null,
       "supported_devices": [
         {
@@ -1076,6 +1095,7 @@
         }
       ],
       "enrollment_url": "https://saveonenergy.ca/peak-perks",
+      "learn_more": "https://saveonenergy.ca/en/For-Your-Home/Peak-Perks",
       "management_url": null,
       "supported_devices": [
         {
@@ -1108,17 +1128,18 @@
     {
       "id": "hilo_quebec",
       "name": "Hilo",
-      "provider": "Hydro-Québec / Hilo",
-      "description": "Hydro-Québec's smart energy program rewards participants for reducing consumption during winter peak demand challenges.",
+      "provider": "Hydro-Qu\u00e9bec / Hilo",
+      "description": "Hydro-Qu\u00e9bec's smart energy program rewards participants for reducing consumption during winter peak demand challenges.",
       "regions": [
         {
           "state": "QC",
           "utilities": [
-            "Hydro-Québec"
+            "Hydro-Qu\u00e9bec"
           ]
         }
       ],
       "enrollment_url": "https://www.hiloenergie.com/en/",
+      "learn_more": "https://www.hiloenergie.com/en-ca/our-service/how-hilo-works/",
       "management_url": "https://www.hiloenergie.com/en/",
       "supported_devices": [
         {
@@ -1160,6 +1181,7 @@
         }
       ],
       "enrollment_url": "https://www.bchydro.com/powersmart/residential/peak-saver.html",
+      "learn_more": "https://www.bchydro.com/powersmart/residential/rebates-programs/peak-saver.html",
       "management_url": null,
       "supported_devices": [
         {
@@ -1193,6 +1215,7 @@
         }
       ],
       "enrollment_url": "https://www.efficiencyns.ca/eco-shift/",
+      "learn_more": "https://www.efficiencyns.ca/programs-rebates/eco-shift",
       "management_url": null,
       "supported_devices": [
         {
@@ -1234,6 +1257,7 @@
         }
       ],
       "enrollment_url": "https://shop.swtchenergy.com/",
+      "learn_more": "https://swtchenergy.com/blog/news/swtch-energy-launches-canada-home-charging-program-offering-homeowners-free-ev-chargers-and-cash-back-for-charging/",
       "management_url": "https://shop.swtchenergy.com/customer_authentication/redirect?locale=en&region_country=CA",
       "supported_devices": [
         {
@@ -1249,7 +1273,7 @@
         "type": "per_kwh",
         "value": 0.03,
         "currency": "CAD",
-        "description": "Free Level 2 charger + 3¢/kWh credit for managed charging sessions"
+        "description": "Free Level 2 charger + 3\u00a2/kWh credit for managed charging sessions"
       },
       "active": true
     },
@@ -1267,6 +1291,7 @@
         }
       ],
       "enrollment_url": "https://www.aps.com/en/Residential/Service-Plans/Storage-Rewards",
+      "learn_more": "https://www.aps.com/en/About/Sustainability-and-Innovation/Technology-and-Innovation/Storage-Rewards",
       "management_url": null,
       "supported_devices": [
         {
@@ -1300,6 +1325,7 @@
         }
       ],
       "enrollment_url": "https://www.delmarva.com/ElkNeck",
+      "learn_more": "https://www.delmarva.com/SmartEnergy/InnovationTechnology/Pages/BatteryStorage.aspx",
       "management_url": null,
       "supported_devices": [
         {
@@ -1333,6 +1359,7 @@
         }
       ],
       "enrollment_url": "https://www.efficiencymaine.com/battery/",
+      "learn_more": "https://www.efficiencymaine.com/small-battery-incentives/",
       "management_url": null,
       "supported_devices": [
         {
@@ -1366,6 +1393,7 @@
         }
       ],
       "enrollment_url": "https://www.oru.com/battery-pilot",
+      "learn_more": "https://www.oru.com/en/about-us/media-center/news/2023/01-27/oru-sunrun-bring-pilot-project-to-warwick",
       "management_url": null,
       "supported_devices": [
         {
@@ -1409,6 +1437,7 @@
         }
       ],
       "enrollment_url": "https://www.psegliny.com/saveenergyandmoney/battery",
+      "learn_more": "https://www.psegliny.com/saveenergyandmoney/GreenEnergy/SolarEnergy/EnergyStorageRewards",
       "management_url": null,
       "supported_devices": [
         {
@@ -1433,7 +1462,7 @@
       "id": "oppd_smart_thermostat",
       "name": "OPPD Smart Thermostat Program",
       "provider": "Omaha Public Power District",
-      "description": "OPPD manages enrolled smart thermostats during peak summer demand (up to 15 weekdays, May–Oct) in exchange for bill credits.",
+      "description": "OPPD manages enrolled smart thermostats during peak summer demand (up to 15 weekdays, May\u2013Oct) in exchange for bill credits.",
       "regions": [
         {
           "state": "NE",
@@ -1443,6 +1472,7 @@
         }
       ],
       "enrollment_url": "https://www.oppd.com/residential/products-services/smart-thermostat-program/",
+      "learn_more": "https://www.oppd.com/residential/products-services/smart-thermostat-program/",
       "management_url": "https://solutions.oppd.com/",
       "supported_devices": [
         {
@@ -1493,7 +1523,7 @@
       "id": "oppd_cool_smart",
       "name": "OPPD Cool Smart",
       "provider": "Omaha Public Power District",
-      "description": "OPPD installs a free load-control device on your AC or heat pump and cycles it in 15-minute intervals during peak events (up to 12 weekdays/year, 3–7 PM).",
+      "description": "OPPD installs a free load-control device on your AC or heat pump and cycles it in 15-minute intervals during peak events (up to 12 weekdays/year, 3\u20137 PM).",
       "regions": [
         {
           "state": "NE",
@@ -1503,6 +1533,7 @@
         }
       ],
       "enrollment_url": "https://oppd.com/residential/products-services/cool-smart/",
+      "learn_more": "https://oppd.com/residential/products-services/cool-smart/",
       "management_url": null,
       "supported_devices": [
         {
@@ -1511,7 +1542,7 @@
           "models": [
             "*"
           ],
-          "notes": "Utility-installed load-control device on central AC or heat pump (not a smart thermostat — cannot combine with OPPD Smart Thermostat Program)"
+          "notes": "Utility-installed load-control device on central AC or heat pump (not a smart thermostat \u2014 cannot combine with OPPD Smart Thermostat Program)"
         }
       ],
       "reward": {
@@ -1526,7 +1557,7 @@
       "id": "les_peak_rewards",
       "name": "LES Peak Rewards",
       "provider": "Lincoln Electric System",
-      "description": "LES makes brief thermostat adjustments (up to 4°F) during peak summer demand (June–Sept) to help delay the need for new generating resources.",
+      "description": "LES makes brief thermostat adjustments (up to 4\u00b0F) during peak summer demand (June\u2013Sept) to help delay the need for new generating resources.",
       "regions": [
         {
           "state": "NE",
@@ -1536,6 +1567,7 @@
         }
       ],
       "enrollment_url": "https://www.les.com/sustainability/les-peak-rewards",
+      "learn_more": "https://www.les.com/sustainability/les-peak-rewards",
       "management_url": "https://www.thermostatrewards.com/lespeakrewards/",
       "supported_devices": [
         {
@@ -1604,6 +1636,7 @@
         }
       ],
       "enrollment_url": "https://nppd.energywisenebraska.com/smart-thermostat/",
+      "learn_more": "https://nppd.energywisenebraska.com/smart-thermostat/",
       "management_url": "https://nppd.energywisenebraska.com/",
       "supported_devices": [
         {
@@ -1627,7 +1660,7 @@
       "id": "sppd_water_heater",
       "name": "SPPD Water Heater Program",
       "provider": "Southern Public Power District",
-      "description": "Southern Public Power District uses time clocks on electric water heaters to control heating elements during morning (8–10 AM) and evening (5–8 PM) peak periods. Over 1,100 units currently in service.",
+      "description": "Southern Public Power District uses time clocks on electric water heaters to control heating elements during morning (8\u201310 AM) and evening (5\u20138 PM) peak periods. Over 1,100 units currently in service.",
       "regions": [
         {
           "state": "NE",
@@ -1637,6 +1670,7 @@
         }
       ],
       "enrollment_url": "https://southernpd.com/",
+      "learn_more": "https://southernpd.com/electric-water-heater-program/",
       "management_url": null,
       "supported_devices": [
         {

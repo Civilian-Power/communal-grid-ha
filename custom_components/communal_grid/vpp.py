@@ -220,6 +220,7 @@ class VPPEntry:
     description: str
     regions: list[VPPRegion]
     enrollment_url: str
+    learn_more: str | None
     management_url: str | None
     supported_devices: list[VPPSupportedDevice]
     reward: VPPReward
@@ -233,6 +234,7 @@ class VPPEntry:
             "provider": self.provider,
             "description": self.description,
             "enrollment_url": self.enrollment_url,
+            "learn_more": self.learn_more,
             "management_url": self.management_url,
             "supported_devices": [sd.to_dict() for sd in self.supported_devices],
             "reward": self.reward.to_dict(),
@@ -380,6 +382,7 @@ class VPPRegistry:
                         for r in item.get("regions", [])
                     ],
                     enrollment_url=item.get("enrollment_url", ""),
+                    learn_more=item.get("learn_more"),
                     management_url=item.get("management_url"),
                     supported_devices=supported_devices,
                     reward=VPPReward(

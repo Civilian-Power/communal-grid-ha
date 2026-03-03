@@ -308,6 +308,7 @@ class VPPMatchSensor(
                     "provider": vpp.provider,
                     "description": vpp.description,
                     "enrollment_url": vpp.enrollment_url,
+                    "learn_more": vpp.learn_more,
                     "management_url": vpp.management_url,
                     "reward": vpp.reward.to_dict(),
                     "matching_devices": matching_devices,
