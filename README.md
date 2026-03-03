@@ -14,15 +14,14 @@ Communal Grid is a smart home service that automatically finds your smart energy
 - **DER device mapping** — Maps your discovered devices to Distributed Energy Resource types for VPP eligibility
 - **HACS compatible** — Install through the [Home Assistant](https://www.home-assistant.io/) Community Store
 
-## Prerequisites
+## Requirements
 
-1. **OpenEI API Key** (free) — Sign up at [apps.openei.org/services/api/signup](https://apps.openei.org/services/api/signup/)
-2. **Know your rate plan** — Check your utility bill for the plan name (e.g., PG&E E-TOU-C)
+1. **Live in the United States or Canada** (for VPP program coverage)
+2. **[Home Assistant](https://www.home-assistant.io/)** running within your home or business (Works on Home Assistant hardware, Raspberry Pi, or Docker containers)
+3. **OpenEI API Key** (free) — Sign up at [apps.openei.org/services/api/signup](https://apps.openei.org/services/api/signup/)
+4. **Know your rate plan** — Check your utility bill for the plan name (e.g., PG&E E-TOU-C)
 
 ## Installation
-
-> [!IMPORTANT]
-> The Communal Grid app for Home Assistant requires you have a working [Home Assistant](https://www.home-assistant.io/) running within your home or business. Works on Home Assistant hardware, Raspberry Pi, or Docker containers.
 
 ### HACS (Recommended)
 
@@ -51,121 +50,7 @@ Communal Grid is a smart home service that automatically finds your smart energy
 
 > **Note:** The utility auto-detection uses the home location configured in **Settings → System → General**. Make sure your home address is set for the best results.
 
-## Dashboard Cards
-
-### Controllable Devices Card with Power Usage (requires button-card from HACS)
-
-Shows all discovered devices grouped by category, with current power draw and estimated annual kWh for devices that report usage.
-
-```yaml
-type: vertical-stack
-cards:
-  - type: custom:button-card
-    entity: sensor.communal_grid_controllable_devices
-    layout: vertical
-    name: Controllable Devices
-    show_state: false
-    show_icon: true
-    icon: mdi:devices
-    custom_fields:
-      count: |
-        [[[
-          const total = entity.state;
-          const power = entity.attributes.total_current_power_w;
-          let text = `${total} devices found`;
-          if (power > 0) text += ` · ${power.toFixed(0)} W now`;
-          return text;
-        ]]]
-      annual: |
-        [[[
-          const annual = entity.attributes.total_estimated_annual_kwh;
-          const monitored = entity.attributes.monitored_device_count;
-          if (annual > 0) return `~${annual.toFixed(0)} kWh/yr estimated (${monitored} monitored)`;
-          return '';
-        ]]]
-    styles:
-      grid:
-        - grid-template-areas: '"i" "n" "count" "annual"'
-        - grid-template-rows: auto auto auto auto
-      card:
-        - border-radius: 16px 16px 0 0
-        - padding: 20px
-        - background: 'linear-gradient(135deg, #6366f1, #4f46e5)'
-        - color: white
-      icon:
-        - width: 32px
-        - color: white
-      name:
-        - font-size: 14px
-        - opacity: '0.9'
-        - text-transform: uppercase
-        - letter-spacing: 1px
-      custom_fields:
-        count:
-          - font-size: 24px
-          - font-weight: bold
-          - margin-top: 8px
-        annual:
-          - font-size: 13px
-          - opacity: '0.8'
-          - margin-top: 4px
-  - type: markdown
-    content: >
-      {% set s = states.sensor.communal_grid_controllable_devices %}
-      {% if s and s.attributes %}
-
-      {% set thermostats = s.attributes.get('thermostats', []) %}
-      {% set plugs = s.attributes.get('smart_plugs', []) %}
-      {% set evs = s.attributes.get('ev_chargers', []) %}
-      {% set heaters = s.attributes.get('water_heaters', []) %}
-      {% set lights = s.attributes.get('smart_lights', []) %}
-      {% set monitors = s.attributes.get('power_monitors', []) %}
-
-      {% macro device_line(d) %}
-      - **{{ d.name }}**{% if d.manufacturer %} · {{ d.manufacturer }}{% endif %}{% if d.model %} {{ d.model }}{% endif %}{% if d.current_power_w != None %} · ⚡ {{ d.current_power_w }}W (est. {{ d.estimated_annual_kwh }} kWh/yr){% endif %}
-
-      {% endmacro %}
-
-      {% if thermostats | length > 0 %}
-
-      **🌡️ Thermostats ({{ thermostats | length }})**
-
-      {% for d in thermostats %}{{ device_line(d) }}{% endfor %}{% endif %}
-
-      {% if plugs | length > 0 %}
-
-      **🔌 Smart Plugs ({{ plugs | length }})**
-
-      {% for d in plugs %}{{ device_line(d) }}{% endfor %}{% endif %}
-
-      {% if evs | length > 0 %}
-
-      **🚗 EV Chargers ({{ evs | length }})**
-
-      {% for d in evs %}{{ device_line(d) }}{% endfor %}{% endif %}
-
-      {% if heaters | length > 0 %}
-
-      **🔥 Water Heaters ({{ heaters | length }})**
-
-      {% for d in heaters %}{{ device_line(d) }}{% endfor %}{% endif %}
-
-      {% if lights | length > 0 %}
-
-      **💡 Smart Lights ({{ lights | length }})**
-
-      {% for d in lights %}{{ device_line(d) }}{% endfor %}{% endif %}
-
-      {% if monitors | length > 0 %}
-
-      **⚡ Power Monitors ({{ monitors | length }})**
-
-      {% for d in monitors %}{{ device_line(d) }}{% endfor %}{% endif %}
-
-      {% else %}
-      No device data available yet.
-      {% endif %}
-```
+## Show VPP Matches on your Home Assistant dashboard
 
 ### VPP Matches Card (requires button-card from HACS)
 
