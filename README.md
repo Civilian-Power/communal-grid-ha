@@ -148,11 +148,8 @@ cards:
       {% endfor %}
       </details>
       {% endfor %}
-      {% if vpp.learn_more %}
-      <a href="{{ vpp.learn_more }}" target="_blank" style="display:inline-block;padding:10px 24px;background:transparent;color:#FFD400;border:2px solid #FFD400;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;margin-right:8px;">Learn more</a>
-      {% endif %}
       {% if vpp.enrollment_url %}
-      <a href="{{ vpp.enrollment_url }}" target="_blank" style="display:inline-block;padding:10px 24px;background:#FFD400;color:#1a1a1a;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">Enroll</a>
+      <a href="{{ vpp.enrollment_url }}" target="_blank" style="text-decoration:none;font-weight:bold;font-size:14px;color:#FFD400;">Enroll</a>{% if vpp.learn_more %} · <a href="{{ vpp.learn_more }}" target="_blank" style="text-decoration:none;font-style:italic;font-size:14px;color:#FFD400;opacity:0.8;">Learn more…</a>{% endif %}
       {% endif %}
       {% endfor %}
       {% endif %}
