@@ -42,11 +42,10 @@ Communal Grid is a smart home service that automatically finds your smart energy
 
 1. Go to **Settings → Devices & Services → Add Integration**
 2. Search for **Communal Grid**
-3. Follow the 4-step setup:
+3. Follow the 3-step setup:
    - **Step 1:** Enter your OpenEI API key
    - **Step 2:** Select your utility company — the list is automatically filtered to utilities near your Home Assistant home location
    - **Step 3:** Select your rate plan
-   - **Step 4:** Optionally configure a gas rate
 
 > **Note:** The utility auto-detection uses the home location configured in **Settings → System → General**. Make sure your home address is set for the best results.
 

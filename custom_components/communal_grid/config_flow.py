@@ -1,10 +1,9 @@
 """Config flow for Communal Grid integration.
 
-Walks the user through 4 steps:
+Walks the user through 3 steps:
 1. Enter OpenEI API key
 2. Select their utility company (auto-detected from HA home location)
 3. Select their rate plan
-4. Optionally configure gas rate
 """
 from __future__ import annotations
 
@@ -26,12 +25,6 @@ from .const import (
     CONF_UTILITY_NAME,
     CONF_RATE_PLAN_ID,
     CONF_RATE_PLAN_NAME,
-    CONF_CONFIGURE_GAS,
-    CONF_GAS_RATE,
-    CONF_GAS_UNIT,
-    DEFAULT_GAS_RATE,
-    DEFAULT_GAS_UNIT,
-    GAS_UNITS,
 )
 from .openei_client import OpenEIClient, OpenEIAuthError, OpenEIConnectionError, OpenEIError
 
@@ -146,7 +139,8 @@ class CommunalGridConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if plan["label"] == selected:
                     self._data[CONF_RATE_PLAN_ID] = plan["label"]
                     self._data[CONF_RATE_PLAN_NAME] = plan["name"]
-                    return await self.async_step_gas_config()
+                    title = f"{self._data[CONF_UTILITY_NAME]} - {self._data[CONF_RATE_PLAN_NAME]}"
+                    return self.async_create_entry(title=title, data=self._data)
             errors["base"] = "invalid_rate_plan"
 
         if not self._rate_plans:
@@ -172,68 +166,3 @@ class CommunalGridConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_gas_config(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
-        """Step 4: Optionally configure gas rate."""
-        if user_input is not None:
-            self._data[CONF_CONFIGURE_GAS] = user_input.get(CONF_CONFIGURE_GAS, False)
-            if self._data[CONF_CONFIGURE_GAS]:
-                self._data[CONF_GAS_RATE] = user_input.get(CONF_GAS_RATE, DEFAULT_GAS_RATE)
-                self._data[CONF_GAS_UNIT] = user_input.get(CONF_GAS_UNIT, DEFAULT_GAS_UNIT)
-
-            title = f"{self._data[CONF_UTILITY_NAME]} - {self._data[CONF_RATE_PLAN_NAME]}"
-            return self.async_create_entry(title=title, data=self._data)
-
-        return self.async_show_form(
-            step_id="gas_config",
-            data_schema=vol.Schema({
-                vol.Optional(CONF_CONFIGURE_GAS, default=False): bool,
-                vol.Optional(CONF_GAS_RATE, default=DEFAULT_GAS_RATE): vol.Coerce(float),
-                vol.Optional(CONF_GAS_UNIT, default=DEFAULT_GAS_UNIT): vol.In(
-                    {k: v for k, v in GAS_UNITS.items()}
-                ),
-            }),
-        )
-
-    @staticmethod
-    @callback
-    def async_get_options_flow(
-        config_entry: config_entries.ConfigEntry,
-    ) -> CommunalGridOptionsFlow:
-        """Get the options flow handler."""
-        return CommunalGridOptionsFlow(config_entry)
-
-
-class CommunalGridOptionsFlow(config_entries.OptionsFlow):
-    """Handle options flow for updating gas rate."""
-
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self._config_entry = config_entry
-
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
-        """Handle options step."""
-        if user_input is not None:
-            new_data = {**self._config_entry.data}
-            new_data[CONF_CONFIGURE_GAS] = user_input.get(CONF_CONFIGURE_GAS, False)
-            new_data[CONF_GAS_RATE] = user_input.get(CONF_GAS_RATE, DEFAULT_GAS_RATE)
-            new_data[CONF_GAS_UNIT] = user_input.get(CONF_GAS_UNIT, DEFAULT_GAS_UNIT)
-
-            self.hass.config_entries.async_update_entry(self._config_entry, data=new_data)
-            return self.async_create_entry(title="", data={})
-
-        current_data = self._config_entry.data
-
-        return self.async_show_form(
-            step_id="init",
-            data_schema=vol.Schema({
-                vol.Optional(CONF_CONFIGURE_GAS, default=current_data.get(CONF_CONFIGURE_GAS, False)): bool,
-                vol.Optional(CONF_GAS_RATE, default=current_data.get(CONF_GAS_RATE, DEFAULT_GAS_RATE)): vol.Coerce(float),
-                vol.Optional(CONF_GAS_UNIT, default=current_data.get(CONF_GAS_UNIT, DEFAULT_GAS_UNIT)): vol.In(
-                    {k: v for k, v in GAS_UNITS.items()}
-                ),
-            }),
-        )

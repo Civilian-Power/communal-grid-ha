@@ -21,15 +21,6 @@
         "data": {
           "rate_plan_selection": "Rate Plan"
         }
-      },
-      "gas_config": {
-        "title": "Gas Rate (Optional)",
-        "description": "OpenEI doesn't provide gas rates, but you can manually enter your gas rate here. Check your gas bill for the current rate per therm.",
-        "data": {
-          "configure_gas": "Configure gas rate?",
-          "gas_rate": "Gas rate (per unit)",
-          "gas_unit": "Gas unit"
-        }
       }
     },
     "error": {
@@ -43,19 +34,6 @@
       "api_error": "Failed to communicate with OpenEI API. Please try again later.",
       "no_utilities": "No utilities found. Please verify your API key.",
       "no_rate_plans": "No residential rate plans found for this utility."
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "title": "Update Communal Grid Settings",
-        "description": "Update your gas rate configuration. Electric rates are fetched automatically from OpenEI.",
-        "data": {
-          "configure_gas": "Configure gas rate?",
-          "gas_rate": "Gas rate (per unit)",
-          "gas_unit": "Gas unit"
-        }
-      }
     }
   }
 }
