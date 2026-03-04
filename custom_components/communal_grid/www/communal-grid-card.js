@@ -361,6 +361,6 @@ window.customCards.push({
   type: "communal-grid-card",
   name: "Communal Grid",
   description: "Shows VPP programs available for your smart home devices",
-  preview: true,
+  preview: false,
   documentationURL: "https://github.com/Civilian-Power/communal-grid-ha",
 });
