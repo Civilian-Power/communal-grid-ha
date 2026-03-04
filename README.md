@@ -51,111 +51,11 @@ Communal Grid is a smart home service that automatically finds your smart energy
 
 ## Show VPP Matches on your Home Assistant dashboard
 
-### VPP Matches Card (requires button-card from HACS)
+### VPP Matches Card
 
-Shows which Virtual Power Plant programs are available in your region for your specific devices, with per-VPP qualifying device lists, power usage, and enrollment links.
+After installing, go to any dashboard → Edit → Add Card → select **Communal Grid**. No additional setup needed.
 
 ![VPP Matches Card](assets/CivPow-HA-VPP-matches.png)
-
-```yaml
-type: vertical-stack
-cards:
-  - type: custom:button-card
-    entity: sensor.communal_grid_vpp_matches
-    layout: vertical
-    name: Available VPP Programs
-    show_state: false
-    show_icon: true
-    icon: mdi:leaf-circle-outline
-    custom_fields:
-      count: |
-        [[[
-          const s = entity.state;
-          if (s === 'unavailable' || s === 'unknown' || s === undefined)
-            return 'Discovering devices…';
-          const n = Number(s);
-          if (n === 0) return 'No eligible programs found';
-          return `${n} eligible program${n > 1 ? 's' : ''} found`;
-        ]]]
-      subtitle: |
-        [[[
-          const s = entity.state;
-          if (s === 'unavailable' || s === 'unknown' || s === undefined)
-            return '';
-          const n = Number(s);
-          if (n === 0) return '';
-          return 'Enroll in 1 or more to start earning ASAP';
-        ]]]
-    styles:
-      grid:
-        - grid-template-areas: '"i" "n" "count" "subtitle"'
-        - grid-template-rows: auto auto auto auto
-      card:
-        - border-radius: 16px 16px 0 0
-        - padding: 20px
-        - background: '#FFD400'
-        - color: '#1a1a1a'
-      icon:
-        - width: 32px
-        - color: '#1a1a1a'
-      name:
-        - font-size: 14px
-        - opacity: '0.9'
-        - text-transform: uppercase
-        - letter-spacing: 1px
-      custom_fields:
-        count:
-          - font-size: 24px
-          - font-weight: bold
-          - margin-top: 8px
-        subtitle:
-          - font-size: 13px
-          - opacity: '0.7'
-          - margin-top: 4px
-  - type: markdown
-    content: |
-      {% set s = states.sensor.communal_grid_vpp_matches %}
-      {% if s and s.attributes and s.attributes.matching_vpps is defined %}
-      {% set vpps = s.attributes.matching_vpps %}
-      {% if vpps | length == 0 %}
-      *No VPP programs match your current utility and devices. Add more smart devices or check back as new programs launch.*
-      {% else %}
-      {% for vpp in vpps %}
-      ---
-      ### ⚡ {{ vpp.name }}
-      {{ vpp.matching_device_count }} qualifying device{{ 's' if vpp.matching_device_count != 1 }}{% if vpp.total_matching_power_w > 0 %} · **{{ vpp.total_matching_power_w | round(0) }}W** now{% endif %}{% if vpp.total_matching_annual_kwh > 0 %} · ~{{ vpp.total_matching_annual_kwh | round(0) }} kWh/yr{% endif %}
-      {% if vpp.reward and vpp.reward.description %}
-      💰 {{ vpp.reward.description }}
-      {% endif %}
-      {% set ns = namespace(models=[]) %}
-      {% for d in vpp.matching_devices %}
-      {% set mkey = (d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown') %}
-      {% if mkey not in ns.models %}
-      {% set ns.models = ns.models + [mkey] %}
-      {% endif %}
-      {% endfor %}
-      {% for mkey in ns.models | sort %}
-      {% set mdevices = vpp.matching_devices | selectattr('manufacturer') | list | sort(attribute='name') %}
-      {% set mw = namespace(pw=0, kwh=0) %}
-      {% for d in vpp.matching_devices if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
-      {% set mw.pw = mw.pw + (d.current_power_w or 0) %}
-      {% set mw.kwh = mw.kwh + (d.estimated_annual_kwh or 0) %}
-      {% endfor %}
-      <details><summary><strong>{{ mkey | trim }}</strong>{% if mw.pw > 0 %} · ⚡ {{ mw.pw | round(0) }}W{% endif %}{% if mw.kwh > 0 %} · ~{{ mw.kwh | round(0) }} kWh/yr{% endif %}</summary>
-      {% for d in vpp.matching_devices | sort(attribute='name') if ((d.manufacturer or '') ~ ' ' ~ (d.model or 'Unknown')) == mkey %}
-      · {{ d.name }}
-      {% endfor %}
-      </details>
-      {% endfor %}
-      {% if vpp.enrollment_url %}
-      <b><a href="{{ vpp.enrollment_url }}" target="_blank" style="text-decoration:none;font-size:14px;color:#FFD400;">Enroll</a></b>{% if vpp.learn_more %} · <i><a href="{{ vpp.learn_more }}" target="_blank" style="text-decoration:none;font-size:14px;color:#FFD400;opacity:0.8;">Learn more…</a></i>{% endif %}
-      {% endif %}
-      {% endfor %}
-      {% endif %}
-      {% else %}
-      *Discovering your devices and matching VPP programs…*
-      {% endif %}
-```
 
 ## Supported Utilities
 

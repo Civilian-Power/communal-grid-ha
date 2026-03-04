@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
@@ -17,10 +18,46 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS_LIST: list[Platform] = [Platform.SENSOR]
 
+_CARD_REGISTERED = False  # guard so we only register once across reloads
+
+
+def _register_lovelace_card(hass: HomeAssistant) -> None:
+    """Serve the custom Lovelace card JS and tell HA's frontend to load it.
+
+    This runs once on first setup. The card then appears automatically in the
+    HA dashboard card picker — no manual YAML or button-card required.
+    """
+    global _CARD_REGISTERED
+    if _CARD_REGISTERED:
+        return
+
+    card_path = pathlib.Path(__file__).parent / "www" / "communal-grid-card.js"
+    if not card_path.exists():
+        _LOGGER.warning(
+            "Communal Grid: card JS not found at %s — skipping card registration",
+            card_path,
+        )
+        return
+
+    url = "/communal_grid/communal-grid-card.js"
+
+    # Serve the file as a static path
+    hass.http.register_static_path(str(card_path.parent), str(card_path.parent))
+
+    # Tell the HA frontend to load it (shows up in card picker)
+    from homeassistant.components.frontend import add_extra_js_url
+    add_extra_js_url(hass, url)
+
+    _CARD_REGISTERED = True
+    _LOGGER.debug("Communal Grid: registered Lovelace card at %s", url)
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Communal Grid from a config entry."""
     _LOGGER.debug("Setting up Communal Grid integration for %s", entry.title)
+
+    # Register the Lovelace card (no-op after first call)
+    _register_lovelace_card(hass)
 
     # Create rate data coordinator (1-minute update cycle)
     rate_coordinator = CommunalGridCoordinator(hass, entry)
