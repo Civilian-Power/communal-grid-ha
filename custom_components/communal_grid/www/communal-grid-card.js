@@ -2,14 +2,14 @@
  * Communal Grid Card for Home Assistant
  * Displays VPP program matches for your smart home devices.
  *
- * Auto-registered by the Communal Grid integration — no manual YAML needed.
+ * Auto-registered by the Communal Grid integration -- no manual YAML needed.
  * Just install the integration, then pick "Communal Grid" from the card picker.
  *
  * Version: 1.0.0
  */
 
 class CommunalGridCard extends HTMLElement {
-  // ─── Lovelace card boilerplate ────────────────────────────────────────────
+  // --- Lovelace card boilerplate -----------------------------------------------
 
   static getConfigElement() {
     return document.createElement("communal-grid-card-editor");
@@ -27,7 +27,7 @@ class CommunalGridCard extends HTMLElement {
     return 4;
   }
 
-  // ─── Core HA lifecycle ────────────────────────────────────────────────────
+  // --- Core HA lifecycle -------------------------------------------------------
 
   set hass(hass) {
     this._hass = hass;
@@ -41,7 +41,7 @@ class CommunalGridCard extends HTMLElement {
     this._render();
   }
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // --- Render -----------------------------------------------------------------
 
   _render() {
     if (!this.shadowRoot || !this._hass) return;
@@ -61,7 +61,7 @@ class CommunalGridCard extends HTMLElement {
           font-family: var(--primary-font-family, sans-serif);
         }
 
-        /* ── Header ── */
+        /* -- Header -- */
         .header {
           background: #FFD400;
           color: #1a1a1a;
@@ -96,7 +96,7 @@ class CommunalGridCard extends HTMLElement {
           margin-top: 4px;
         }
 
-        /* ── Body ── */
+        /* -- Body -- */
         .body {
           background: var(--card-background-color, #1c1c1e);
           border-radius: 0 0 16px 16px;
@@ -119,7 +119,7 @@ class CommunalGridCard extends HTMLElement {
           line-height: 1.6;
         }
 
-        /* ── VPP entry ── */
+        /* -- VPP entry -- */
         .divider {
           border: none;
           border-top: 1px solid rgba(255,255,255,0.12);
@@ -153,7 +153,7 @@ class CommunalGridCard extends HTMLElement {
           align-items: flex-start;
         }
 
-        /* ── Device groups ── */
+        /* -- Device groups -- */
         details {
           font-size: 13px;
           margin: 4px 0;
@@ -176,7 +176,7 @@ class CommunalGridCard extends HTMLElement {
         summary::-webkit-details-marker { display: none; }
 
         summary::after {
-          content: "›";
+          content: "\\203A";
           font-size: 18px;
           opacity: 0.5;
           transition: transform 0.2s;
@@ -201,11 +201,11 @@ class CommunalGridCard extends HTMLElement {
         }
 
         .device-item::before {
-          content: "·";
+          content: "\\00B7";
           opacity: 0.5;
         }
 
-        /* ── Actions ── */
+        /* -- Actions -- */
         .actions {
           display: flex;
           gap: 12px;
@@ -252,19 +252,19 @@ class CommunalGridCard extends HTMLElement {
       <!-- Body -->
       <div class="body">
         ${isLoading
-          ? `<div class="loading">Discovering devices…</div>`
+          ? `<div class="loading">Discovering devices...</div>`
           : count === 0
           ? `<div class="empty">No VPP programs match your current utility and devices.<br>Add more smart devices or check back as new programs launch.</div>`
           : vpps
           ? vpps.map(v => this._renderVpp(v)).join("")
-          : `<div class="loading">Loading program details…</div>`
+          : `<div class="loading">Loading program details...</div>`
         }
       </div>
     `;
   }
 
   _headerCount(isLoading, count) {
-    if (isLoading) return "Discovering devices…";
+    if (isLoading) return "Discovering devices...";
     if (count === 0) return "No eligible programs found";
     return `${count} eligible program${count !== 1 ? "s" : ""} found`;
   }
@@ -288,24 +288,24 @@ class CommunalGridCard extends HTMLElement {
 
     return `
       <hr class="divider">
-      <div class="vpp-name">⚡ ${this._esc(vpp.name)}</div>
+      <div class="vpp-name">&#9889; ${this._esc(vpp.name)}</div>
       <div class="vpp-meta">
         <span>${deviceCount} qualifying device${deviceCount !== 1 ? "s" : ""}</span>
-        ${powerW > 0 ? `<span class="dot">·</span><span><strong>${Math.round(powerW)}W</strong> now</span>` : ""}
-        ${kwhYr > 0 ? `<span class="dot">·</span><span>~${Math.round(kwhYr)} kWh/yr</span>` : ""}
+        ${powerW > 0 ? `<span class="dot">&middot;</span><span><strong>${Math.round(powerW)}W</strong> now</span>` : ""}
+        ${kwhYr > 0 ? `<span class="dot">&middot;</span><span>~${Math.round(kwhYr)} kWh/yr</span>` : ""}
       </div>
       ${vpp.reward && vpp.reward.description
-        ? `<div class="reward">💰 <span>${this._esc(vpp.reward.description)}</span></div>`
+        ? `<div class="reward">&#128176; <span>${this._esc(vpp.reward.description)}</span></div>`
         : ""}
       ${groupKeys.map(key => {
         const g = groups[key];
         const metaParts = [];
-        if (g.power > 0) metaParts.push(`⚡ ${Math.round(g.power)}W`);
+        if (g.power > 0) metaParts.push(`&#9889; ${Math.round(g.power)}W`);
         if (g.kwh > 0) metaParts.push(`~${Math.round(g.kwh)} kWh/yr`);
         return `
           <details>
             <summary>
-              <span>${this._esc(key)}${metaParts.length ? " · " + metaParts.join(" · ") : ""}</span>
+              <span>${this._esc(key)}${metaParts.length ? " &middot;" + metaParts.join(" &middot;") : ""}</span>
             </summary>
             <div class="device-list">
               ${g.devices.map(name => `<div class="device-item">${this._esc(name)}</div>`).join("")}
@@ -317,7 +317,7 @@ class CommunalGridCard extends HTMLElement {
           ? `<a class="btn-enroll" href="${this._esc(vpp.enrollment_url)}" target="_blank" rel="noopener">Enroll</a>`
           : ""}
         ${vpp.learn_more
-          ? `<a class="btn-learn" href="${this._esc(vpp.learn_more)}" target="_blank" rel="noopener">Learn more →</a>`
+          ? `<a class="btn-learn" href="${this._esc(vpp.learn_more)}" target="_blank" rel="noopener">Learn more</a>`
           : ""}
       </div>
     `;
@@ -333,7 +333,7 @@ class CommunalGridCard extends HTMLElement {
   }
 }
 
-// ─── Simple editor (shows in the card picker visual editor) ─────────────────
+// --- Simple editor (shows in the card picker visual editor) -------------------
 
 class CommunalGridCardEditor extends HTMLElement {
   setConfig() {}
@@ -349,12 +349,12 @@ class CommunalGridCardEditor extends HTMLElement {
   }
 }
 
-// ─── Register both elements ──────────────────────────────────────────────────
+// --- Register both elements ---------------------------------------------------
 
 customElements.define("communal-grid-card", CommunalGridCard);
 customElements.define("communal-grid-card-editor", CommunalGridCardEditor);
 
-// ─── Register with HA's card picker ─────────────────────────────────────────
+// --- Register with HA's card picker -------------------------------------------
 
 window.customCards = window.customCards || [];
 window.customCards.push({
